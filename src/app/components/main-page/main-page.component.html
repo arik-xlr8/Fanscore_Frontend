@@ -1,1 +1,71 @@
-<p>main-page works!</p>
+<div class="main-wrapper">
+
+  <section class="heatmap-wrap" (scroll)="onHeatmapScroll($event)">
+    <div class="heatmap">
+
+      <div
+        class="tile"
+        *ngFor="let player of players; trackBy: trackById"
+        [ngStyle]="{
+          'background': getColor(player.change),
+          'grid-column': 'span ' + getSizeByChange(player.change).col,
+          'grid-row': 'span ' + getSizeByChange(player.change).row
+        }"
+        (click)="selectPlayer(player)"
+      >
+        <div class="tile-top">
+          <div class="badge">{{ player.team }}</div>
+          <div class="badge">{{ formatChange(player.change) }}</div>
+        </div>
+
+        <div class="tile-bottom">
+          <div class="name">{{ player.name }}</div>
+          <div class="sub">
+            {{ player.position }} • Değer: {{ player.value }}
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="loading" *ngIf="isLoading">
+      Yükleniyor...
+    </div>
+
+    <div class="end" *ngIf="isEnd">
+      Hepsi bu kadar.
+    </div>
+  </section>
+
+  <aside class="side-panel">
+
+    <div class="side-header">
+      <h2>Son Maçlar</h2>
+      <span class="pill">Güncel</span>
+    </div>
+
+    <div class="side-content">
+
+      <div
+        class="match-card"
+        *ngFor="let match of recentMatches"
+      >
+        <div class="match-teams">
+          <span class="team">{{ match.home }}</span>
+          <span class="score">
+            {{ match.homeScore }} - {{ match.awayScore }}
+          </span>
+          <span class="team">{{ match.away }}</span>
+        </div>
+
+        <div class="match-meta">
+          <span>{{ match.date }}</span>
+          <span>{{ match.league }}</span>
+        </div>
+      </div>
+
+    </div>
+
+  </aside>
+
+</div>
