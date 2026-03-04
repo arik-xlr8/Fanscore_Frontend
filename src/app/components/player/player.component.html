@@ -1,1 +1,273 @@
-<p>player works!</p>
+<div class="page">
+  <div class="shell">
+    <section class="profile">
+      <div class="profileTop">
+        <div class="avatar">
+          <img [src]="player.photoUrl" [alt]="player.name" />
+        </div>
+
+        <div class="meta">
+          <div class="nameRow">
+            <div class="name">{{ player.name }}</div>
+            <div [class]="getTrendClass(player.trendDelta)">
+              <span *ngIf="player.trendDelta > 0">+</span>{{ player.trendDelta }}%
+            </div>
+          </div>
+
+          <div class="subRow">
+            <div class="chip">{{ player.team }}</div>
+            <div class="chip">{{ player.position }}</div>
+            <div class="chip">Yaş {{ player.age }}</div>
+            <div class="chip">{{ player.nation }}</div>
+            <div class="chip">{{ player.foot }}</div>
+          </div>
+
+          <div class="bio">{{ player.bio }}</div>
+
+          <div class="quickStats">
+            <div class="stat">
+              <div class="k">Son Değer</div>
+              <div class="v">{{ player.lastValueM }}M €</div>
+            </div>
+            <div class="stat">
+              <div class="k">Toplam Oy</div>
+              <div class="v">{{ player.community.votes | number }}</div>
+            </div>
+            <div class="stat">
+              <div class="k">Ortalama</div>
+              <div class="v">{{ intervalAvg }}M €</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="peopleThink">
+          <div class="peopleThink__title">İnsanlar nasıl düşünüyor</div>
+
+          <div class="thinkRow">
+            <div class="thinkLabel">Yükseliş</div>
+            <div class="thinkBar">
+              <div class="thinkFill" [style.width.%]="mood.bullish"></div>
+            </div>
+            <div class="thinkPct">{{ mood.bullish }}%</div>
+          </div>
+
+          <div class="thinkRow">
+            <div class="thinkLabel">Düşüş</div>
+            <div class="thinkBar thinkBar--red">
+              <div class="thinkFill thinkFill--red" [style.width.%]="mood.bearish"></div>
+            </div>
+            <div class="thinkPct">{{ mood.bearish }}%</div>
+          </div>
+
+          <div class="mini">
+            <div class="mini__item">
+              <div class="k">Bu aralık oy</div>
+              <div class="v">{{ intervalVotes | number }}</div>
+            </div>
+            <div class="mini__item">
+              <div class="k">Ortalama</div>
+              <div class="v">{{ intervalAvg }}M</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="vote">
+      <div class="voteHead">
+        <div class="voteTitle">Değer Oylaması</div>
+
+        <div class="intervals">
+          <button
+            type="button"
+            class="seg"
+            *ngFor="let it of intervals"
+            [class.seg--active]="it.key === selectedInterval"
+            (click)="selectInterval(it.key)"
+          >
+            {{ it.label }}
+          </button>
+        </div>
+      </div>
+
+      <div class="voteBody">
+        <div class="rangeHint">
+          5M € ile 100M € arasında seç. İstersen aşağıdan kendin gir.
+        </div>
+
+        <div class="bubbleGrid">
+          <button
+            type="button"
+            class="bubble"
+            *ngFor="let v of bubblesM"
+            [class.bubble--active]="v === selectedBubbleM"
+            (click)="pickBubble(v)"
+          >
+            {{ v }}M
+          </button>
+        </div>
+
+        <div class="customRow">
+          <div class="customLeft">
+            <div class="customTitle">Siz değer girin</div>
+            <div class="customSub">5M–100M arası, 5’er artışa yuvarlanır.</div>
+          </div>
+
+          <div class="customRight">
+            <div class="inputWrap">
+              <input
+                type="number"
+                min="5"
+                max="100"
+                step="5"
+                [(ngModel)]="customValueM"
+                (focus)="useCustom()"
+                (blur)="clampCustom()"
+                placeholder="Örn: 55"
+              />
+              <div class="suffix">M €</div>
+            </div>
+
+            <button type="button" class="btn" (click)="submitVote()">
+              Oyla
+            </button>
+          </div>
+        </div>
+
+        <div class="selectedLine">
+          Seçimin:
+          <span class="sel" *ngIf="selectedBubbleM != null">{{ selectedBubbleM }}M €</span>
+          <span class="sel" *ngIf="selectedBubbleM == null && customValueM != null">{{ customValueM }}M €</span>
+          <span class="muted" *ngIf="selectedBubbleM == null && customValueM == null">Henüz seçim yok</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="blog">
+      <div class="sectionHead">
+        <div class="sectionTitle">Blog</div>
+        <div class="sectionHint">Oyuncu hakkında kısa analizler, maç notları, topluluk yazıları.</div>
+      </div>
+
+      <div class="blogGrid">
+        <article class="post">
+          <div class="postTop">
+            <div class="postTitle">Son 3 Ay Performans Analizi</div>
+            <div class="postMeta">03 Mar 2026 • 4 dk okuma</div>
+          </div>
+          <div class="postBody">
+            Son 10 maçta dripling yüzdesi yükseldi, son pas kalitesi belirgin şekilde arttı.
+            Özellikle iç sahada daha agresif koşular görüyoruz. Bu trend devam ederse değer oylamaları yukarı kayabilir.
+          </div>
+          <div class="postFooter">
+            <div class="pillLite">Taktik</div>
+            <div class="pillLite">Form</div>
+            <div class="pillLite">3 Ay</div>
+          </div>
+        </article>
+
+        <article class="post">
+          <div class="postTop">
+            <div class="postTitle">En Etkili Rol: İç Forvet mi Kanat mı?</div>
+            <div class="postMeta">28 Feb 2026 • 3 dk okuma</div>
+          </div>
+          <div class="postBody">
+            Kanatta çizgiye basınca hız avantajı artıyor ama iç koridora girdiğinde şut kalitesi yükseliyor.
+            Bu yüzden “hybrid winger” rolü ideal olabilir. Takım yapısına göre değeri ciddi etkiler.
+          </div>
+          <div class="postFooter">
+            <div class="pillLite">Rol</div>
+            <div class="pillLite">Pozisyon</div>
+          </div>
+        </article>
+
+        <article class="post">
+          <div class="postTop">
+            <div class="postTitle">Topluluk Ne Diyor?</div>
+            <div class="postMeta">20 Feb 2026 • 2 dk okuma</div>
+          </div>
+          <div class="postBody">
+            Yükseliş diyenler son performans ve potansiyel nedeniyle iyimser. Düşüş diyenler ise istikrar ve sakatlık riskini öne sürüyor.
+            Oylama aralığını değiştirerek algının nasıl oynadığını görebilirsin.
+          </div>
+          <div class="postFooter">
+            <div class="pillLite">Topluluk</div>
+            <div class="pillLite">Trend</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="comments">
+      <div class="sectionHead">
+        <div class="sectionTitle">Yorumlar</div>
+        <div class="sectionHint">Topluluğun görüşleri — saygılı kalalım.</div>
+      </div>
+
+      <div class="commentList">
+        <div class="commentCard">
+          <div class="commentTop">
+            <div class="who">
+              <div class="avatarSm">YA</div>
+              <div>
+                <div class="whoName">y***a</div>
+                <div class="whoMeta">1 gün önce</div>
+              </div>
+            </div>
+            <div class="scoreTag">55M</div>
+          </div>
+          <div class="commentText">
+            Son maçtaki pres ve koşu mesafesi beni çok etkiledi. 50 üstü kesin.
+          </div>
+        </div>
+
+        <div class="commentCard">
+          <div class="commentTop">
+            <div class="who">
+              <div class="avatarSm">AK</div>
+              <div>
+                <div class="whoName">a***k</div>
+                <div class="whoMeta">3 gün önce</div>
+              </div>
+            </div>
+            <div class="scoreTag">45M</div>
+          </div>
+          <div class="commentText">
+            Potansiyel yüksek ama istikrar biraz soru işareti. 45 daha gerçekçi.
+          </div>
+        </div>
+
+        <div class="commentCard">
+          <div class="commentTop">
+            <div class="who">
+              <div class="avatarSm">MÇ</div>
+              <div>
+                <div class="whoName">m***ç</div>
+                <div class="whoMeta">1 hafta önce</div>
+              </div>
+            </div>
+            <div class="scoreTag">60M</div>
+          </div>
+          <div class="commentText">
+            Doğru sistemde oynarsa 60’a gider. Özellikle iç koridor koşuları çok iyi.
+          </div>
+        </div>
+      </div>
+
+      <div class="commentForm">
+        <div class="formTitle">Yorum yaz</div>
+
+        <div class="formRow">
+          <div class="inputWrap inputWrap--wide">
+            <input type="text" placeholder="Örn: Benim oyum 50M çünkü..." />
+          </div>
+          <button type="button" class="btn">Gönder</button>
+        </div>
+
+        <div class="formNote">
+          İpucu: Oylama yaptığın aralığa göre yorumunu yazarsan daha anlamlı olur.
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

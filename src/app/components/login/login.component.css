@@ -1,0 +1,168 @@
+:host {
+  display: block;
+}
+
+.page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+
+.shell {
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+}
+
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 32px;
+  background: #ffffff;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.sub {
+  color: #6b7280;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.field label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.inputWrap {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.inputWrap input {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.inputWrap input::placeholder {
+  color: #9ca3af;
+}
+
+.inputWrap--password {
+  display: flex;
+  align-items: center;
+}
+
+.eye {
+  border: none;
+  background: none;
+  padding: 0 12px;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.hint {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 4px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.check {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 13px;
+  color: #374151;
+}
+
+.link {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn {
+  margin-top: 6px;
+  padding: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  background: #3ca015;
+  color: white;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.line {
+  height: 1px;
+  background: #e5e7eb;
+  flex: 1;
+}
+
+.txt {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.ghost {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.alert {
+  border: 1px solid #fca5a5;
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
