@@ -1,1 +1,71 @@
-<p>hali-saha works!</p>
+<div class="page">
+  <div class="shell">
+    <section class="hero">
+      <div class="heroTop">
+        <div>
+          <div class="title">Halı Saha Ayarla</div>
+          <div class="subtitle">
+            Açık maçları keşfet, eksik oyuncu bul, hızlıca iletişime geç.
+          </div>
+        </div>
+
+        <div class="heroTools">
+          <div class="search">
+            <input [(ngModel)]="query" placeholder="Halı saha, konum, 7v7, kaleci..." />
+            <div class="searchIcon">⌕</div>
+          </div>
+
+          <div class="select">
+            <label>Sırala</label>
+            <select [(ngModel)]="sortBy">
+              <option>Önerilen</option>
+              <option>Fiyat Artan</option>
+              <option>Fiyat Azalan</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="chips">
+        <button
+          type="button"
+          class="chip"
+          *ngFor="let t of timeTags"
+          [class.chip--active]="t === selectedTime"
+          (click)="selectedTime = t"
+        >
+          {{ t }}
+        </button>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card" *ngFor="let item of filteredItems; trackBy: trackByItemId">
+        <div class="imgWrap">
+          <img [src]="item.imageUrl" [alt]="item.name" />
+          <div class="badgeRow">
+            <div class="badge">{{ item.timeTag }}</div>
+            <div class="badge badge--muted">{{ item.pitch }}</div>
+          </div>
+          <div class="loc">{{ item.location }}</div>
+        </div>
+
+        <div class="body">
+          <div class="name">{{ item.name }}</div>
+          <div class="desc">{{ item.desc }}</div>
+
+          <div class="bottom">
+            <div class="price">
+              <div class="k">Saatlik</div>
+              <div class="v">{{ formatPrice(item.pricePerHour) }} ₺</div>
+            </div>
+
+            <button type="button" class="btn" (click)="contact(item)">
+              İletişim Kur
+            </button>
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>
+</div>

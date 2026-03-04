@@ -1,1 +1,163 @@
-<p>merch works!</p>
+<div class="page">
+  <div class="shell">
+    <div class="hero">
+      <div class="heroLeft">
+        <div class="title">Merch</div>
+        <div class="subtitle">
+          2. el forma, atkı, imzalı koleksiyon ürünleri ve taraftar eşyaları. Güvenli alışveriş, hızlı keşif.
+        </div>
+
+        <div class="tools">
+          <div class="search">
+            <input
+              type="text"
+              [(ngModel)]="query"
+              placeholder="Ürün, takım, kategori ara..."
+            />
+            <div class="searchIcon">⌕</div>
+          </div>
+
+          <div class="select">
+            <label>Sırala</label>
+            <select [(ngModel)]="sortBy">
+              <option>Önerilen</option>
+              <option>Fiyat Artan</option>
+              <option>Fiyat Azalan</option>
+            </select>
+          </div>
+
+          <button class="cartBtn" type="button" (click)="toggleCart()">
+            Sepet
+            <span class="cartCount" *ngIf="cartCount > 0">{{ cartCount }}</span>
+          </button>
+        </div>
+
+        <div class="cats">
+          <button
+            type="button"
+            class="cat"
+            *ngFor="let c of categories"
+            [class.cat--active]="c === selectedCategory"
+            (click)="setCategory(c)"
+          >
+            {{ c }}
+          </button>
+        </div>
+      </div>
+
+      <div class="heroRight">
+        <div class="promoCard">
+          <div class="promoTitle">Koleksiyon Köşesi</div>
+          <div class="promoText">
+            İmzalı ürünler, vintage atkılar ve sınırlı seri parçalar burada. Stock bitmeden kap.
+          </div>
+          <div class="promoTags">
+            <div class="tag">İmzalı</div>
+            <div class="tag">Vintage</div>
+            <div class="tag">2. El</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card" *ngFor="let item of filteredItems; trackBy: trackByIndex">
+        <div class="imgWrap">
+          <img [src]="item.imageUrl" [alt]="item.title" />
+          <div class="badges">
+            <div class="badge">{{ item.category }}</div>
+            <div class="badge badge--muted">{{ item.team }}</div>
+            <div class="badge badge--signed" *ngIf="item.isSigned">İmzalı</div>
+          </div>
+          <div class="stock" [class.stock--out]="item.stock === 0">
+            {{ item.stock === 0 ? 'Tükendi' : ('Stok: ' + item.stock) }}
+          </div>
+        </div>
+
+        <div class="body">
+          <div class="cardTitle">{{ item.title }}</div>
+          <div class="desc">{{ item.desc }}</div>
+
+          <div class="meta">
+            <div class="pill">{{ item.condition }}</div>
+            <div class="pill pill--ghost">{{ item.shipping }}</div>
+            <div class="pill pill--ghost">{{ item.location }}</div>
+          </div>
+
+          <div class="priceRow">
+            <div class="price">
+              <span class="now">{{ formatPrice(item.price) }} ₺</span>
+              <span class="old" *ngIf="item.oldPrice">{{ formatPrice(item.oldPrice) }} ₺</span>
+            </div>
+
+            <button
+              type="button"
+              class="add"
+              (click)="addToCart(item)"
+              [disabled]="item.stock === 0"
+            >
+              Sepete ekle
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="drawerOverlay" *ngIf="cartOpen" (click)="toggleCart()"></div>
+
+    <aside class="drawer" [class.drawer--open]="cartOpen">
+      <div class="drawerHead">
+        <div class="drawerTitle">Sepetim</div>
+        <button class="x" type="button" (click)="toggleCart()">✕</button>
+      </div>
+
+      <div class="drawerBody" *ngIf="cart.length; else empty">
+        <div class="line" *ngFor="let line of cart">
+          <div class="thumb">
+            <img [src]="line.item.imageUrl" [alt]="line.item.title" />
+          </div>
+
+          <div class="lineMid">
+            <div class="lineTitle">{{ line.item.title }}</div>
+            <div class="lineMeta">
+              <span>{{ line.item.team }}</span> • <span>{{ line.item.condition }}</span>
+            </div>
+
+            <div class="qtyRow">
+              <button type="button" class="qty" (click)="dec(line)">−</button>
+              <div class="qtyNum">{{ line.qty }}</div>
+              <button type="button" class="qty" (click)="inc(line)">+</button>
+              <button type="button" class="remove" (click)="remove(line)">Kaldır</button>
+            </div>
+          </div>
+
+          <div class="lineRight">
+            <div class="linePrice">{{ formatPrice(line.item.price * line.qty) }} ₺</div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #empty>
+        <div class="empty">
+          <div class="emptyTitle">Sepet boş</div>
+          <div class="emptyText">Beğendiğin ürünleri sepete ekle, sonra buradan yönet.</div>
+        </div>
+      </ng-template>
+
+      <div class="drawerFoot">
+        <div class="sumRow">
+          <div class="sumLabel">Ara toplam</div>
+          <div class="sumVal">{{ formatPrice(subtotal) }} ₺</div>
+        </div>
+
+        <button class="checkout" type="button" [disabled]="cart.length === 0">
+          Ödemeye geç
+        </button>
+
+        <button class="clear" type="button" (click)="clearCart()" [disabled]="cart.length === 0">
+          Sepeti temizle
+        </button>
+      </div>
+    </aside>
+  </div>
+</div>

@@ -6,6 +6,7 @@
       <div
         class="tile"
         *ngFor="let player of players; trackBy: trackById"
+        [routerLink]="['/player', player.id]"
         [ngStyle]="{
           'background': getColor(player.change),
           'grid-column': 'span ' + getSizeByChange(player.change).col,
