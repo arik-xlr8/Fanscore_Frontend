@@ -12,9 +12,10 @@
 
       <form [formGroup]="form" (ngSubmit)="submit()" class="form">
         <div class="field">
-          <label>Email</label>
+          <label for="email">Email</label>
           <div class="inputWrap" [class.inputWrap--error]="email?.touched && email?.invalid">
             <input
+              id="email"
               type="email"
               formControlName="email"
               placeholder="ornek@mail.com"
@@ -27,32 +28,19 @@
         </div>
 
         <div class="field">
-          <label>Şifre</label>
-          <div class="inputWrap inputWrap--password" [class.inputWrap--error]="password?.touched && password?.invalid">
+          <label for="password">Şifre</label>
+          <div class="inputWrap" [class.inputWrap--error]="password?.touched && password?.invalid">
             <input
-              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              type="password"
               formControlName="password"
               placeholder="••••••••"
               autocomplete="current-password"
             />
-            <button type="button" class="eye" (click)="togglePassword()">
-              {{ showPassword ? 'Gizle' : 'Göster' }}
-            </button>
           </div>
           <div class="hint" *ngIf="password?.touched && password?.invalid">
-            Şifre en az 6 karakter olmalı.
+            Şifre zorunludur.
           </div>
-        </div>
-
-        <div class="row">
-          <label class="check">
-            <input type="checkbox" formControlName="rememberMe" />
-            <span>Beni hatırla</span>
-          </label>
-
-          <button type="button" class="link" (click)="goReset()">
-            Şifremi unuttum
-          </button>
         </div>
 
         <button class="btn" type="submit" [disabled]="loading">
@@ -70,11 +58,6 @@
           Hesabın yok mu? Kayıt ol
         </button>
       </form>
-    </div>
-
-    <div class="note">
-      Dev notu: Şu an endpoint <b>{{ baseUrl }}{{ loginEndpoint }}</b> olarak ayarlı.
-      Backend hazır olunca gerçek URL’yi yazarsın.
     </div>
   </div>
 </div>
