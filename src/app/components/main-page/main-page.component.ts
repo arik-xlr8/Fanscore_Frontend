@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-type Player = {
+import { PlayerService } from '../../services/player.service';
+import { Player } from '../../../models/player';
+import { MatchService } from '../../services/match.service';
+import { RecentMatch } from '../../../models/recent-match';
+
+type HeatmapPlayer = {
   id: number;
   name: string;
   team: string;
@@ -18,135 +23,77 @@ type Player = {
   styleUrl: './main-page.component.css'
 })
 export class MainPageComponent implements OnInit {
-  players: Player[] = [];
-  recentMatches = [
-  {
-    home: 'Real Madrid',
-    away: 'Barcelona',
-    homeScore: 3,
-    awayScore: 1,
-    date: '12 Mar 2026',
-    league: 'La Liga'
-  },
-  {
-    home: 'Man City',
-    away: 'Arsenal',
-    homeScore: 2,
-    awayScore: 2,
-    date: '11 Mar 2026',
-    league: 'Premier League'
-  },
-  {
-    home: 'Galatasaray',
-    away: 'Fenerbahçe',
-    homeScore: 1,
-    awayScore: 0,
-    date: '10 Mar 2026',
-    league: 'Süper Lig'
-  },
-  {
-    home: 'Bayern',
-    away: 'Dortmund',
-    homeScore: 4,
-    awayScore: 2,
-    date: '09 Mar 2026',
-    league: 'Bundesliga'
-  }
-];
-  selectedPlayer: Player | null = null;
+  private playerService = inject(PlayerService);
+  private matchService = inject(MatchService);
+
+  players: HeatmapPlayer[] = [];
+
+  recentMatches : RecentMatch[] = [];
+
+  selectedPlayer: HeatmapPlayer | null = null;
 
   isLoading = false;
   isEnd = false;
 
-  private page = 0;
-  private pageSize = 18;
-  private maxPages = 6;
-
-  ngOnInit() {
-    this.loadNextPage();
+  ngOnInit(): void {
+    this.getPlayers();
+    this.getRecentMatches();
   }
 
-  trackById = (_: number, p: Player) => p.id;
+  trackById = (_: number, p: HeatmapPlayer) => p.id;
 
-  selectPlayer(player: Player) {
+  selectPlayer(player: HeatmapPlayer): void {
     this.selectedPlayer = player;
   }
 
-  onHeatmapScroll(e: Event) {
-    if (this.isLoading || this.isEnd) return;
-
-    const el = e.target as HTMLElement;
-    const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 200;
-
-    if (nearBottom) {
-      this.loadNextPage();
-    }
+  onHeatmapScroll(_e: Event): void {
+    // Şimdilik backend'den hepsini tek seferde çekiyoruz.
+    // HTML bozulmasın diye methodu bırakıyoruz.
   }
 
-  private loadNextPage() {
-    if (this.isLoading || this.isEnd) return;
-
-    this.isLoading = true;
-
-    this.mockApiFetchPlayers(this.page, this.pageSize).then(newItems => {
-      if (newItems.length === 0) {
-        this.isEnd = true;
-        this.isLoading = false;
-        return;
+  private getRecentMatches(): void {
+    this.matchService.getRecentSuperLigMatches().subscribe({
+      next: (matches: RecentMatch[]) => {
+        this.recentMatches = matches;
+      },
+      error: (err) => {
+        console.error('Süper Lig maçları alınamadı:', err);
+        this.recentMatches = [];
       }
-
-      this.players = [...this.players, ...newItems];
-      this.page++;
-      this.isLoading = false;
     });
   }
 
-  private mockApiFetchPlayers(page: number, pageSize: number): Promise<Player[]> {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        if (page >= this.maxPages) {
-          resolve([]);
-          return;
-        }
+  private getPlayers(): void {
+    this.isLoading = true;
+    this.isEnd = false;
 
-        const baseId = page * pageSize;
-
-        const poolNames = [
-          'Lionel Messi', 'Cristiano Ronaldo', 'Kylian Mbappé', 'Erling Haaland',
-          'Jude Bellingham', 'Kevin De Bruyne', 'Vinícius Júnior', 'Mohamed Salah',
-          'Harry Kane', 'Robert Lewandowski', 'Rodri', 'Neymar Jr.',
-          'Arda Güler', 'Hakan Çalhanoğlu', 'Mauro Icardi', 'Edin Džeko',
-          'Lautaro Martínez', 'Bukayo Saka', 'Phil Foden', 'Bernardo Silva',
-          'Heung-min Son', 'Victor Osimhen', 'Pedri', 'Gavi',
-          'Virgil van Dijk', 'Alisson Becker', 'Thibaut Courtois', 'Achraf Hakimi',
-          'Bruno Fernandes', 'Marcus Rashford', 'Khvicha Kvaratskhelia', 'Jamāl Musiala'
-        ];
-
-        const teams = [
-          'Real Madrid', 'Barcelona', 'Man City', 'Liverpool', 'Arsenal',
-          'Inter', 'PSG', 'Bayern', 'Galatasaray', 'Fenerbahçe', 'Napoli', 'Man United'
-        ];
-
-        const positions = ['ST', 'RW', 'LW', 'AM', 'CM', 'DM', 'CB', 'RB', 'GK'];
-
-        const items: Player[] = Array.from({ length: pageSize }).map((_, i) => {
-          const id = baseId + i + 1;
-          const name = poolNames[(baseId + i) % poolNames.length];
-          const team = teams[(baseId + i * 2) % teams.length];
-          const position = positions[(baseId + i * 3) % positions.length];
-
-          const value = 55 + ((baseId + i) % 46); // 55..100
-          const change = this.round1((Math.sin((id + 3) * 0.9) * 6) + (Math.cos((id + 1) * 0.35) * 2)); // ~ -8..+8
-
-          return { id, name, team, position, value, change };
-        });
-
-        resolve(items);
-      }, 550);
+    this.playerService.getAllPlayers().subscribe({
+      next: (players: Player[]) => {
+        this.players = players.map((player) => this.mapToHeatmapPlayer(player));
+        this.isLoading = false;
+        this.isEnd = true;
+      },
+      error: (err) => {
+        console.error('Oyuncular alınamadı:', err);
+        this.players = [];
+        this.isLoading = false;
+        this.isEnd = true;
+      }
     });
   }
 
-  getColor(change: number) {
+  private mapToHeatmapPlayer(player: Player): HeatmapPlayer {
+    return {
+      id: player.playerId,
+      name: `${player.name} ${player.surname}`,
+      team: player.teamId != null ? `Team ${player.teamId}` : 'No Team',
+      position: player.position ?? '-',
+      value: player.age ?? 0,
+      change: 0
+    };
+  }
+
+  getColor(change: number): string {
     const c = this.clamp(change, -10, 10);
     const t = (c + 10) / 20;
     const hue = 0 + t * 120;
@@ -162,16 +109,12 @@ export class MainPageComponent implements OnInit {
     return { col: 2, row: 10 };
   }
 
-  formatChange(change: number) {
+  formatChange(change: number): string {
     const sign = change > 0 ? '+' : '';
     return `${sign}${change.toFixed(1)}%`;
   }
 
-  private clamp(n: number, a: number, b: number) {
+  private clamp(n: number, a: number, b: number): number {
     return Math.max(a, Math.min(b, n));
-  }
-
-  private round1(n: number) {
-    return Math.round(n * 10) / 10;
   }
 }

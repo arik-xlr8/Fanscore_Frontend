@@ -14,7 +14,7 @@ import { TeamsComponent } from './components/teams/teams.component';
 
 export const routes: Routes = [
     {path: '', component: MainPageComponent},
-    {path: 'player/:playerid', component: PlayerComponent},
+    {path: 'player/:id', component: PlayerComponent},
     {path: 'merch', component: MerchComponent},
     {path: 'merch/productid', component: ProductComponent},
     {path: 'hali-saha', component: HaliSahaComponent},
