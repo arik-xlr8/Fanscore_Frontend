@@ -3,31 +3,34 @@ export interface Player {
   name: string;
   surname: string;
   teamId: number | null;
+  teamName: string | null;
   age: number | null;
   position: string | null;
   ppUrl: string | null;
+  averageRating: number | null;
+  ratingCount: number;
+  change: number | null;
 }
 
-export type FootType = 'Right' | 'Left' | 'Both';
-
-export interface PlayerCommunity {
-  votes: number;
-  avgVoteM: number;
-  bullishPct: number;
-  bearishPct: number;
+export interface PlayerRating {
+  ratingId: number;
+  userId: number;
+  ratingValue: number;
+  comment: string | null;
+  createdAt: string;
+  periodType: string;
 }
 
-export interface PlayerViewModel {
-  id: number;
+export interface PlayerDetail {
+  playerId: number;
   name: string;
-  team: string;
-  position: string;
-  nation: string;
-  age: number;
-  foot: FootType;
-  photoUrl: string;
-  bio: string;
-  lastValueM: number;
-  trendDelta: number;
-  community: PlayerCommunity;
+  surname: string;
+  teamId: number | null;
+  teamName: string | null;
+  age: number | null;
+  position: string | null;
+  ppUrl: string | null;
+  averageRating: number | null;
+  ratingCount: number;
+  ratings: PlayerRating[];
 }

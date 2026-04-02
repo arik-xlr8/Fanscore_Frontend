@@ -585,3 +585,40 @@
   .bubbleGrid{grid-template-columns: repeat(5, minmax(0,1fr))}
   .quickStats{grid-template-columns: 1fr}
 }
+
+.periodFilters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.filterBtn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: transparent;
+  color: rgb(61, 61, 61);
+  cursor: pointer;
+}
+
+.filterBtn--active {
+  background: rgb(253, 190, 18);
+  color: black;
+}
+
+.pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pill--up {
+  background: rgba(0, 255, 140, 0.18);
+}
+
+.pill--down {
+  background: rgba(255, 80, 80, 0.18);
+}

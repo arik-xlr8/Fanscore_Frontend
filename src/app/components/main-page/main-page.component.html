@@ -1,6 +1,19 @@
 <div class="main-wrapper">
 
   <section class="heatmap-wrap" (scroll)="onHeatmapScroll($event)">
+
+    <div class="heatmap-filters">
+      <button
+        type="button"
+        class="filter-btn"
+        *ngFor="let period of periods"
+        [class.filter-btn--active]="selectedPeriod === period.key"
+        (click)="selectPeriod(period.key)"
+      >
+        {{ period.label }}
+      </button>
+    </div>
+
     <div class="heatmap">
 
       <div
@@ -8,7 +21,7 @@
         *ngFor="let player of players; trackBy: trackById"
         [routerLink]="['/player', player.id]"
         [ngStyle]="{
-          'background': getColor(player.change),
+          'background': getColor(player.averageRating),
           'grid-column': 'span ' + getSizeByChange(player.change).col,
           'grid-row': 'span ' + getSizeByChange(player.change).row
         }"
@@ -16,13 +29,18 @@
       >
         <div class="tile-top">
           <div class="badge">{{ player.team }}</div>
-          <div class="badge">{{ formatChange(player.change) }}</div>
+          <div [class]="getChangeClass(player.change)">
+            {{ formatChange(player.change) }}
+          </div>
         </div>
 
         <div class="tile-bottom">
           <div class="name">{{ player.name }}</div>
           <div class="sub">
-            {{ player.position }} • Değer: {{ player.value }}
+            {{ player.position }} • Puan: {{ formatAverageRating(player.averageRating) }}
+          </div>
+          <div class="sub">
+            Oy: {{ player.ratingCount }}
           </div>
         </div>
       </div>
@@ -41,11 +59,15 @@
   <aside class="side-panel">
 
     <div class="side-header">
-      <h2><span>Son Maçlar</span> <a routerLink="/teams" class="all-teams">Tüm Takımlar <i class="fa-solid fa-arrow-right"></i></a> </h2>
+      <h2>
+        <span>Son Maçlar</span>
+        <a routerLink="/teams" class="all-teams">
+          Tüm Takımlar <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </h2>
     </div>
 
     <div class="side-content">
-
       <div
         class="match-card"
         *ngFor="let match of recentMatches"
@@ -63,7 +85,6 @@
           <span>{{ match.league }}</span>
         </div>
       </div>
-
     </div>
 
   </aside>

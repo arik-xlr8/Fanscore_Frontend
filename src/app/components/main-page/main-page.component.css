@@ -201,3 +201,32 @@ a{
   opacity: .7;
   margin-top: 6px;
 }
+
+.heatmap-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: yellow;
+  color: black;
+  cursor: pointer;
+}
+
+.filter-btn--active {
+  background: rgb(228, 167, 35);
+  color: black;
+}
+
+.badge--up {
+  background: rgba(0, 255, 140, 0.18);
+}
+
+.badge--down {
+  background: rgba(255, 80, 80, 0.18);
+}

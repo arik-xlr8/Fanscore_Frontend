@@ -10,11 +10,23 @@ export class PlayerService {
   private http = inject(HttpClient);
   private readonly baseUrl = 'http://localhost:5153/api/Player';
 
-  getAllPlayers(): Observable<Player[]> {
-    return this.http.get<Player[]>(this.baseUrl);
+  getAllPlayers(periodType?: string) {
+    let url = this.baseUrl;
+
+    if (periodType) {
+      url += `?periodType=${periodType}`;
+    }
+
+    return this.http.get<Player[]>(url);
   }
 
-  getPlayerById(playerId: number): Observable<Player> {
-    return this.http.get<Player>(`${this.baseUrl}/${playerId}`);
+  getPlayerById(playerId: number, periodType?: string) {
+    let url = `${this.baseUrl}/${playerId}`;
+
+    if (periodType) {
+      url += `?periodType=${periodType}`;
+    }
+
+    return this.http.get<Player>(url);
   }
 }
