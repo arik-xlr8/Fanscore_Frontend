@@ -1,1 +1,83 @@
-<p>profile works!</p>
+<div class="page">
+  <div class="shell">
+    <div *ngIf="isLoading" class="sectionHint">Profil yükleniyor...</div>
+    <div *ngIf="error && !isLoading" class="sectionHint">{{ error }}</div>
+    <div *ngIf="success" class="sectionSuccess">{{ success }}</div>
+
+    <ng-container *ngIf="!isLoading && profile">
+      <section class="profileCard">
+        <div class="profileHeader">
+          <div class="profileAvatar">
+            <img [src]="profilePic" alt="Profil Fotoğrafı" />
+          </div>
+
+          <div class="profilePhotoActions">
+            <label class="uploadBtn">
+              Fotoğraf Seç
+              <input type="file" accept=".jpg,.jpeg,.png,.webp" hidden (change)="onPhotoSelected($event)" />
+            </label>
+
+            <div class="sectionHint" *ngIf="isUploading">Fotoğraf yükleniyor...</div>
+          </div>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="save()" class="profileForm">
+          <div class="formRow">
+            <label>Ad</label>
+            <input type="text" formControlName="name" />
+          </div>
+
+          <div class="formRow">
+            <label>Soyad</label>
+            <input type="text" formControlName="surname" />
+          </div>
+
+          <div class="formRow">
+            <label>Kullanıcı Adı</label>
+            <input type="text" formControlName="userName" />
+          </div>
+
+          <button type="submit" class="saveBtn" [disabled]="isSaving">
+            {{ isSaving ? 'Kaydediliyor...' : 'Kaydet' }}
+          </button>
+        </form>
+      </section>
+
+      <section class="recentRatingsSection">
+        <div class="sectionTitle">En Son Verilen Oylar</div>
+
+        <div *ngIf="recentRatings.length === 0" class="sectionHint">
+          Henüz verdiğiniz bir oy yok.
+        </div>
+
+        <div class="ratingList" *ngIf="recentRatings.length > 0">
+          <div class="ratingCard" *ngFor="let rating of recentRatings">
+            <div class="ratingTop">
+              <div class="ratingPlayer">
+                <img
+                  [src]="rating.playerPhoto || '../../../assets/images/Ekran Alıntısı.PNG'"
+                  [alt]="rating.playerName"
+                  class="ratingPlayerImg"
+                />
+                <div>
+                  <div class="ratingPlayerName">{{ rating.playerName }}</div>
+                  <div class="ratingDate">{{ formatDate(rating.createdAt) }}</div>
+                </div>
+              </div>
+
+              <div class="ratingValue">{{ rating.ratingValue }}</div>
+            </div>
+
+            <div class="ratingMeta">
+              <span class="chip">{{ rating.periodType }}</span>
+            </div>
+
+            <div class="ratingComment" *ngIf="rating.comment">
+              {{ rating.comment }}
+            </div>
+          </div>
+        </div>
+      </section>
+    </ng-container>
+  </div>
+</div>

@@ -11,6 +11,7 @@ import { HalisahaDetayComponent } from './components/halisaha-detay/halisaha-det
 import { ProductComponent } from './components/product/product.component';
 import { TeamDetailsComponent } from './components/team-details/team-details.component';
 import { TeamsComponent } from './components/teams/teams.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 export const routes: Routes = [
     {path: '', component: MainPageComponent},
@@ -24,5 +25,6 @@ export const routes: Routes = [
     {path: 'reset-password', component: ResetPasswordComponent},
     {path: 'admin-panel', component: AdminPanelComponent},
     {path: 'teams', component: TeamsComponent},
-    {path: 'teams/:teamid', component: TeamDetailsComponent}
+    {path: 'teams/:teamid', component: TeamDetailsComponent},
+    {path: 'profile', component: ProfileComponent}
 ];
