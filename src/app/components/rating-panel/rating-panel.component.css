@@ -1,0 +1,99 @@
+.rating-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  color: rgb(0, 0, 0);
+}
+
+.rating-panel__header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rating-panel__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.rating-panel__subtitle {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.rating-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.05);
+  color: black;
+  border-radius: 12px;
+  padding: 12px 14px;
+  outline: none;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.input::placeholder {
+  color: rgba(255,255,255,0.45);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.vote-info {
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.vote-info__message {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.rating-panel__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn--secondary {
+  background: rgba(255,255,255,0.08);
+  color: black;
+}
+
+.btn--primary {
+  background: white;
+  color: black;
+}

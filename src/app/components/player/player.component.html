@@ -54,6 +54,62 @@
             </div>
           </div>
         </div>
+
+        <app-rating-panel
+          *ngIf="player"
+          [playerId]="player.playerId"
+        ></app-rating-panel>
+
+        <section class="commentsSection">
+          <div class="sectionTitle">Yorumlar</div>
+
+          <div *ngIf="commentsLoading" class="sectionHint">
+            Yorumlar yükleniyor...
+          </div>
+
+          <div *ngIf="commentsError && !commentsLoading" class="sectionHint">
+            {{ commentsError }}
+          </div>
+
+          <div *ngIf="!commentsLoading && !commentsError && !hasComments" class="sectionHint">
+            Bu oyuncu için henüz yorum yok.
+          </div>
+
+          <div *ngIf="!commentsLoading && hasComments" class="commentList">
+            <div class="commentCard" *ngFor="let comment of comments">
+              <div class="commentTop">
+                <div class="commentUser">{{ comment.userName }}</div>
+                <div class="commentDate">{{ formatCommentDate(comment.createdAt) }}</div>
+              </div>
+
+              <div class="commentText">
+                {{ comment.comment }}
+              </div>
+
+              <div class="commentActions">
+                <button
+                  type="button"
+                  class="reactionBtn"
+                  [class.reactionBtn--active]="comment.userReaction === 'like'"
+                  [disabled]="comment.isReacting"
+                  (click)="likeComment(comment)"
+                >
+                  👍 {{ comment.likeCount }}
+                </button>
+
+                <button
+                  type="button"
+                  class="reactionBtn"
+                  [class.reactionBtn--active]="comment.userReaction === 'dislike'"
+                  [disabled]="comment.isReacting"
+                  (click)="dislikeComment(comment)"
+                >
+                  👎 {{ comment.dislikeCount }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
       </section>
     </ng-container>
   </div>

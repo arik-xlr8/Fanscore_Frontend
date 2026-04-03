@@ -4,26 +4,37 @@ import { ActivatedRoute } from '@angular/router';
 import { filter, map, distinctUntilChanged } from 'rxjs';
 
 import { PlayerService } from '../../services/player.service';
+import { RatingService } from '../../services/rating.service';
 import { Player } from '../../../models/player';
+import {
+  PlayerComment,
+  RatingReactionResult
+} from '../../../models/rating';
+import { RatingPanelComponent } from '../rating-panel/rating-panel.component';
 
 type PeriodKey = 'daily' | 'weekly' | 'monthly' | '3months' | '1year';
 
 @Component({
   selector: 'app-player',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RatingPanelComponent],
   templateUrl: './player.component.html',
   styleUrl: './player.component.css',
 })
 export class PlayerComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private playerService = inject(PlayerService);
+  private ratingService = inject(RatingService);
 
   isLoading = false;
   error = '';
 
   player: Player | null = null;
   playerId: number | null = null;
+
+  comments: PlayerComment[] = [];
+  commentsLoading = false;
+  commentsError = '';
 
   periods: { key: PeriodKey; label: string }[] = [
     { key: 'daily', label: 'Günlük' },
@@ -48,6 +59,7 @@ export class PlayerComponent implements OnInit {
         next: (playerId: number) => {
           this.playerId = playerId;
           this.loadPlayer();
+          this.loadComments();
         },
         error: (err) => {
           console.error('Player route param okunamadı:', err);
@@ -78,6 +90,80 @@ export class PlayerComponent implements OnInit {
         this.error = 'Oyuncu bilgileri yüklenemedi.';
         this.isLoading = false;
       }
+    });
+  }
+
+  private loadComments(): void {
+    if (this.playerId == null) return;
+
+    this.commentsLoading = true;
+    this.commentsError = '';
+
+    this.ratingService.getPlayerComments(this.playerId).subscribe({
+      next: (comments: PlayerComment[]) => {
+        this.comments = comments.map(comment => ({
+          ...comment,
+          userReaction: comment.userReaction ?? 'none',
+          isReacting: false
+        }));
+        this.commentsLoading = false;
+      },
+      error: (err) => {
+        console.error('Yorumlar getirilemedi:', err);
+        this.commentsError = 'Yorumlar yüklenemedi.';
+        this.commentsLoading = false;
+      }
+    });
+  }
+
+  likeComment(comment: PlayerComment): void {
+    if (comment.isReacting) return;
+
+    comment.isReacting = true;
+
+    this.ratingService.likeComment(comment.ratingId).subscribe({
+      next: (result: RatingReactionResult) => {
+        this.applyReactionResult(comment.ratingId, result);
+      },
+      error: (err) => {
+        console.error('Like işlemi başarısız:', err);
+        comment.isReacting = false;
+      }
+    });
+  }
+
+  dislikeComment(comment: PlayerComment): void {
+    if (comment.isReacting) return;
+
+    comment.isReacting = true;
+
+    this.ratingService.dislikeComment(comment.ratingId).subscribe({
+      next: (result: RatingReactionResult) => {
+        this.applyReactionResult(comment.ratingId, result);
+      },
+      error: (err) => {
+        console.error('Dislike işlemi başarısız:', err);
+        comment.isReacting = false;
+      }
+    });
+  }
+
+  private applyReactionResult(ratingId: number, result: RatingReactionResult): void {
+    const target = this.comments.find(c => c.ratingId === ratingId);
+    if (!target) return;
+
+    target.likeCount = result.likeCount;
+    target.dislikeCount = result.dislikeCount;
+    target.userReaction = result.userReaction;
+    target.isReacting = false;
+
+    this.comments = [...this.comments].sort((a, b) => {
+      const totalA = a.likeCount + a.dislikeCount;
+      const totalB = b.likeCount + b.dislikeCount;
+
+      if (totalB !== totalA) return totalB - totalA;
+
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
   }
 
@@ -114,6 +200,10 @@ export class PlayerComponent implements OnInit {
     return this.player?.change ?? 0;
   }
 
+  get hasComments(): boolean {
+    return this.comments.length > 0;
+  }
+
   formatAverageRating(value: number): string {
     return value.toFixed(1);
   }
@@ -121,6 +211,14 @@ export class PlayerComponent implements OnInit {
   formatChange(value: number): string {
     const sign = value > 0 ? '+' : '';
     return `${sign}${value.toFixed(1)}%`;
+  }
+
+  formatCommentDate(date: string): string {
+    return new Date(date).toLocaleDateString('tr-TR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
   }
 
   getChangeClass(value: number): string {
