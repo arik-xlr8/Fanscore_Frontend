@@ -1,1 +1,25 @@
-<p>teams works!</p>
+<div *ngIf="loading">Yükleniyor...</div>
+
+<div *ngIf="!loading && teams.length === 0">
+  Takım bulunamadı.
+</div>
+
+<div class="team-container" *ngIf="!loading && teams.length > 0">
+  <div class="team-card" *ngFor="let team of teams" (click)="goToTeamDetail(team.teamId)">
+
+    <img
+      *ngIf="team.ppUrl; else noImage"
+      [src]="team.ppUrl"
+      [alt]="team.teamName"
+      class="team-logo"
+    />
+
+    <ng-template #noImage>
+      <div class="no-image">No Image</div>
+    </ng-template>
+
+    <div class="team-name">
+      {{ team.teamName }}
+    </div>
+  </div>
+</div>

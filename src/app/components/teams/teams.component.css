@@ -1,0 +1,38 @@
+.team-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.team-card {
+  width: 120px;
+  text-align: center;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 10px;
+  transition: 0.2s;
+}
+
+.team-card:hover {
+  transform: scale(1.05);
+}
+
+.team-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.team-name {
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.no-image {
+  width: 60px;
+  height: 60px;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
