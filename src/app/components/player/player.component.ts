@@ -1,28 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { PlayerService } from '../../services/player.service';
+import { Player, PlayerViewModel } from '../../../models/player';
+import { filter, map, distinctUntilChanged, switchMap } from 'rxjs';
 
 type IntervalKey = 'daily' | 'week' | '3m' | '6m' | '1y';
-
-interface PlayerMock {
-  id: number;
-  name: string;
-  team: string;
-  position: string;
-  nation: string;
-  age: number;
-  foot: 'Right' | 'Left' | 'Both';
-  photoUrl: string;
-  bio: string;
-  lastValueM: number;
-  trendDelta: number;
-  community: {
-    votes: number;
-    avgVoteM: number;
-    bullishPct: number;
-    bearishPct: number;
-  };
-}
 
 @Component({
   selector: 'app-player',
@@ -31,25 +15,30 @@ interface PlayerMock {
   templateUrl: './player.component.html',
   styleUrl: './player.component.css',
 })
-export class PlayerComponent {
-  player: PlayerMock = {
-    id: 1,
-    name: 'Lionel Messi',
-    team: 'FanScore FC',
-    position: 'RW',
+export class PlayerComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private playerService = inject(PlayerService);
+
+  isLoading = false;
+  error = '';
+
+  player: PlayerViewModel = {
+    id: 0,
+    name: '',
+    team: '-',
+    position: '-',
     nation: 'TR',
-    age: 20,
-    foot: 'Left',
+    age: 0,
+    foot: 'Right',
     photoUrl: '../../../assets/images/Ekran Alıntısı.PNG',
-    bio:
-      'Hızlı, agresif ve topu ayağına istediğinde oyun değişiyor. Topluluk oylamasında özellikle son 3 ayda ciddi yükseliş var.',
-    lastValueM: 42,
-    trendDelta: 8.4,
+    bio: 'Oyuncu açıklaması daha sonra eklenecek.',
+    lastValueM: 0,
+    trendDelta: 0,
     community: {
-      votes: 18324,
-      avgVoteM: 48,
-      bullishPct: 71,
-      bearishPct: 29,
+      votes: 0,
+      avgVoteM: 0,
+      bullishPct: 0,
+      bearishPct: 0,
     },
   };
 
@@ -92,6 +81,33 @@ export class PlayerComponent {
     '1y': { bullish: 46, bearish: 54 },
   };
 
+  ngOnInit(): void {
+    this.route.paramMap
+      .pipe(
+        map(params => params.get('id')),
+        filter((id): id is string => !!id),
+        map(id => Number(id)),
+        filter(id => !isNaN(id)),
+        distinctUntilChanged(),
+        switchMap((playerId) => {
+          this.isLoading = true;
+          this.error = '';
+          return this.playerService.getPlayerById(playerId);
+        })
+      )
+      .subscribe({
+        next: (player: Player) => {
+          this.player = this.mapPlayerToViewModel(player);
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Oyuncu getirilemedi:', err);
+          this.error = 'Oyuncu bilgileri yüklenemedi.';
+          this.isLoading = false;
+        }
+      });
+  }
+
   get intervalVotes(): number {
     return this.votesByInterval[this.selectedInterval];
   }
@@ -102,6 +118,28 @@ export class PlayerComponent {
 
   get mood(): { bullish: number; bearish: number } {
     return this.moodByInterval[this.selectedInterval];
+  }
+
+  private mapPlayerToViewModel(player: Player): PlayerViewModel {
+    return {
+      id: player.playerId,
+      name: `${player.name} ${player.surname}`,
+      team: player.teamId != null ? `Team ${player.teamId}` : '-',
+      position: player.position ?? '-',
+      nation: 'TR',
+      age: player.age ?? 0,
+      foot: 'Right',
+      photoUrl: player.ppUrl || '../../../assets/images/Ekran Alıntısı.PNG',
+      bio: 'Oyuncu açıklaması daha sonra eklenecek.',
+      lastValueM: 0,
+      trendDelta: 0,
+      community: {
+        votes: 0,
+        avgVoteM: 0,
+        bullishPct: 0,
+        bearishPct: 0,
+      },
+    };
   }
 
   selectInterval(k: IntervalKey) {
