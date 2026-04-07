@@ -6,7 +6,7 @@
         <div class="sub">FanScore hesabınla devam et.</div>
       </div>
 
-      <div class="alert" *ngIf="error">
+      <div class="alert alert--error" *ngIf="error">
         {{ error }}
       </div>
 
@@ -22,7 +22,7 @@
               autocomplete="email"
             />
           </div>
-          <div class="hint" *ngIf="email?.touched && email?.invalid">
+          <div class="hint hint--error" *ngIf="email?.touched && email?.invalid">
             Geçerli bir email gir.
           </div>
         </div>
@@ -38,7 +38,7 @@
               autocomplete="current-password"
             />
           </div>
-          <div class="hint" *ngIf="password?.touched && password?.invalid">
+          <div class="hint hint--error" *ngIf="password?.touched && password?.invalid">
             Şifre zorunludur.
           </div>
         </div>

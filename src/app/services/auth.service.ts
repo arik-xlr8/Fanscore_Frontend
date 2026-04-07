@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
-import { AuthResponse, LoginRequest, RegisterRequest } from '../../models/auth';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { AuthResponse, LoginRequest, MeResponse, RegisterRequest } from '../../models/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +9,13 @@ import { AuthResponse, LoginRequest, RegisterRequest } from '../../models/auth';
 export class AuthService {
   private http = inject(HttpClient);
   private readonly baseUrl = 'http://localhost:5153/api/Auth';
+
+  private currentUserSubject = new BehaviorSubject<MeResponse | null>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
+
+  isLoggedIn$ = this.currentUser$.pipe(
+    map(user => !!user)
+  );
 
   constructor() {
     console.log('AUTH BASE URL:', this.baseUrl);
@@ -23,39 +30,69 @@ export class AuthService {
   login(payload: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.baseUrl}/login`, payload).pipe(
       tap((response) => {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('userId', response.userId.toString());
-        localStorage.setItem('email', response.email);
+        this.saveAuth(response);
       })
     );
   }
 
   saveAuth(response: AuthResponse): void {
-    localStorage.setItem('token', response.token);
-    localStorage.setItem('userId', response.userId.toString());
-    localStorage.setItem('email', response.email);
+    if (response.accessToken) {
+      localStorage.setItem('token', response.accessToken);
+    }
+
+    if (response.refreshToken) {
+      localStorage.setItem('refreshToken', response.refreshToken);
+    }
   }
 
   getToken(): string | null {
     return localStorage.getItem('token');
   }
 
-  getUserId(): number | null {
-    const value = localStorage.getItem('userId');
-    return value ? Number(value) : null;
-  }
-
-  getEmail(): string | null {
-    return localStorage.getItem('email');
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
   }
 
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
 
-  logout(): void {
+  logout(): Observable<any> {
+    const token = this.getToken();
+
+    return this.http.post(`${this.baseUrl}/logout`, {}, {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      })
+    }).pipe(
+      tap(() => {
+        this.clearAuth();
+      })
+    );
+  }
+
+  clearAuth(): void {
     localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('email');
+    localStorage.removeItem('refreshToken');
+    this.currentUserSubject.next(null);
+  }
+
+  getMe(): Observable<MeResponse> {
+    const token = this.getToken();
+    console.log('TOKEN IN GETME:', token);
+    return this.http.get<MeResponse>(`${this.baseUrl}/me`, {
+
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      })
+    }).pipe(
+      tap((user) => {
+        this.currentUserSubject.next(user);
+      })
+    );
+  }
+
+  getCurrentUserSnapshot(): MeResponse | null {
+    return this.currentUserSubject.value;
   }
 }

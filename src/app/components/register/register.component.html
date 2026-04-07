@@ -6,7 +6,11 @@
         <div class="sub">FanScore'a katıl ve oyuncuları oylamaya başla.</div>
       </div>
 
-      <div class="alert" *ngIf="error">
+      <div class="alert alert--success" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <div class="alert alert--error" *ngIf="error">
         {{ error }}
       </div>
 
@@ -22,7 +26,7 @@
               autocomplete="email"
             />
           </div>
-          <div class="hint" *ngIf="email?.touched && email?.invalid">
+          <div class="hint hint--error" *ngIf="email?.touched && email?.invalid">
             Geçerli bir email gir.
           </div>
         </div>
@@ -38,7 +42,7 @@
               autocomplete="new-password"
             />
           </div>
-          <div class="hint" *ngIf="password?.touched && password?.invalid">
+          <div class="hint hint--error" *ngIf="password?.touched && password?.invalid">
             Şifre en az 6 karakter olmalı.
           </div>
         </div>
@@ -54,7 +58,7 @@
               autocomplete="new-password"
             />
           </div>
-          <div class="hint" *ngIf="confirmPassword?.touched && confirmPassword?.invalid">
+          <div class="hint hint--error" *ngIf="confirmPassword?.touched && confirmPassword?.invalid">
             Şifreyi tekrar gir.
           </div>
         </div>

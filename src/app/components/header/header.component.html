@@ -41,8 +41,14 @@
                 </div>
             </div>
 
-            <a routerLink="/login" class="login-btn btn-style">
-                <i style="margin-right: 7px; font-size: 14px;" class="fa-solid fa-user"></i>Giriş Yap
+            <a *ngIf="!(isLoggedIn$ | async)" routerLink="/login" class="login-btn btn-style">
+                <i style="margin-right: 7px; font-size: 14px;" class="fa-solid fa-user"></i>
+                <span>Giriş Yap</span>
+            </a>
+
+            <a (click)="onLogout()" style="background-color: red;" *ngIf="isLoggedIn$ | async" routerLink="/login" class="login-btn btn-style">
+                <i style="margin-right: 7px; font-size: 14px;" class="fa-solid fa-user"></i>
+                <span>Çıkış Yap</span>
             </a>
         </div>
     </nav>

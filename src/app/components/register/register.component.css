@@ -166,3 +166,33 @@
   margin-bottom: 16px;
   font-size: 13px;
 }
+
+.alert {
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+.alert--success {
+  background: #ecfdf3;
+  color: #15803d;
+  border-color: #86efac;
+}
+
+.alert--error {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+.hint {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.hint--error {
+  color: #dc2626;
+}

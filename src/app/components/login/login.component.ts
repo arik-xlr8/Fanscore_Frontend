@@ -65,7 +65,19 @@ export class LoginComponent {
       .subscribe((res: AuthResponse | null) => {
         if (!res) return;
 
-        this.router.navigateByUrl('/');
+        if (res.accessToken) {
+          this.authService.getMe().subscribe({
+            next: () => {
+              this.router.navigateByUrl('/');
+            },
+            error: () => {
+              this.router.navigateByUrl('/');
+            }
+          });
+        } else {
+          // email doğrulanmamış veya başka durum
+          this.error = res.message || 'Giriş yapılırken bir hata oluştu';
+        }
       });
   }
 
