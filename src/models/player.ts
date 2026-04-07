@@ -1,3 +1,6 @@
+export type PeriodKey = 'daily' | 'weekly' | 'monthly' | '3months' | '1year';
+export type ViewMode = 'trends' | 'shuffle';
+
 export interface Player {
   playerId: number;
   name: string;
@@ -34,3 +37,14 @@ export interface PlayerDetail {
   ratingCount: number;
   ratings: PlayerRating[];
 }
+
+export interface HeatmapPlayer {
+  id: number;
+  name: string;
+  team: string;
+  position: string;
+  averageRating: number;
+  ratingCount: number;
+  change: number;
+  ppUrl?: string;
+};

@@ -2,7 +2,51 @@
 
   <section class="heatmap-wrap" (scroll)="onHeatmapScroll($event)">
 
+    <div class="top-tools">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Oyuncu veya takım ara..."
+          [value]="searchTerm"
+          (input)="onSearchInput($event)"
+        />
+
+        <button
+          *ngIf="searchTerm"
+          type="button"
+          class="clear-search-btn"
+          (click)="clearSearch()"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+
     <div class="heatmap-filters">
+
+      <div class="view-mode-switch">
+        <button
+          type="button"
+          class="filter-btn"
+          [class.filter-btn--active]="selectedMode === 'trends' && !searchTerm.trim()"
+          (click)="selectMode('trends')"
+        >
+          Trendler
+        </button>
+
+        <button
+          type="button"
+          class="filter-btn"
+          [class.filter-btn--active]="selectedMode === 'shuffle' && !searchTerm.trim()"
+          (click)="selectMode('shuffle')"
+        >
+          Karıştır
+        </button>
+      </div>
+
       <button
         type="button"
         class="filter-btn"
@@ -21,7 +65,11 @@
         *ngFor="let player of players; trackBy: trackById"
         [routerLink]="['/player', player.id]"
         [ngStyle]="{
-          'background': getColor(player.averageRating),
+          'background-image': getBackgroundImage(player.ppUrl),
+          'background-size': 'contain',
+          'background-position': 'center',
+          'background-repeat': 'no-repeat',
+          'box-shadow': 'inset 0 0 0 2px ' + getBorderColor(player.change),
           'grid-column': 'span ' + getSizeByChange(player.change).col,
           'grid-row': 'span ' + getSizeByChange(player.change).row
         }"
@@ -51,8 +99,12 @@
       Yükleniyor...
     </div>
 
-    <div class="end" *ngIf="isEnd">
+    <div class="end" *ngIf="isEnd && players.length > 0">
       Hepsi bu kadar.
+    </div>
+
+    <div class="end" *ngIf="isEnd && !isLoading && players.length === 0">
+      Sonuç bulunamadı.
     </div>
   </section>
 

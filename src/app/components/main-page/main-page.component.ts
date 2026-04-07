@@ -1,22 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { PlayerService } from '../../services/player.service';
-import { Player } from '../../../models/player';
+import { HeatmapPlayer, PeriodKey, Player, ViewMode } from '../../../models/player';
 import { MatchService } from '../../services/match.service';
 import { RecentMatch } from '../../../models/recent-match';
-
-type PeriodKey = 'daily' | 'weekly' | 'monthly' | '3months' | '1year';
-
-type HeatmapPlayer = {
-  id: number;
-  name: string;
-  team: string;
-  position: string;
-  averageRating: number;
-  ratingCount: number;
-  change: number;
-};
 
 @Component({
   selector: 'app-main-page',
@@ -25,7 +14,7 @@ type HeatmapPlayer = {
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.css'
 })
-export class MainPageComponent implements OnInit {
+export class MainPageComponent implements OnInit, OnDestroy {
   private playerService = inject(PlayerService);
   private matchService = inject(MatchService);
 
@@ -35,6 +24,12 @@ export class MainPageComponent implements OnInit {
 
   isLoading = false;
   isEnd = false;
+
+  selectedMode: ViewMode = 'trends';
+  searchTerm = '';
+
+  private searchSubject = new Subject<string>();
+  private searchSubscription?: Subscription;
 
   periods: { key: PeriodKey; label: string }[] = [
     { key: 'daily', label: 'Günlük' },
@@ -47,8 +42,13 @@ export class MainPageComponent implements OnInit {
   selectedPeriod: PeriodKey = 'monthly';
 
   ngOnInit(): void {
+    this.setupSearch();
     this.getPlayers();
     this.getRecentMatches();
+  }
+
+  ngOnDestroy(): void {
+    this.searchSubscription?.unsubscribe();
   }
 
   trackById = (_: number, p: HeatmapPlayer) => p.id;
@@ -63,8 +63,49 @@ export class MainPageComponent implements OnInit {
     this.getPlayers();
   }
 
+  selectMode(mode: ViewMode): void {
+    if (mode === 'shuffle') {
+      this.searchTerm = '';
+      this.selectedMode = 'shuffle';
+      this.getPlayers();
+      return;
+    }
+
+    if (this.selectedMode === mode && !this.searchTerm.trim()) return;
+
+    this.selectedMode = mode;
+    this.getPlayers();
+  }
+
+  onSearchInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchTerm = value;
+    this.searchSubject.next(value);
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.selectedMode = 'trends';
+    this.getPlayers();
+  }
+
   onHeatmapScroll(_e: Event): void {
     // Şimdilik backend'den hepsini tek seferde çekiyoruz.
+  }
+
+  private setupSearch(): void {
+    this.searchSubscription = this.searchSubject
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      )
+      .subscribe((term: string) => {
+        if (term.trim()) {
+          this.selectedMode = 'trends';
+        }
+
+        this.getPlayers();
+      });
   }
 
   private getRecentMatches(): void {
@@ -83,7 +124,15 @@ export class MainPageComponent implements OnInit {
     this.isLoading = true;
     this.isEnd = false;
 
-    this.playerService.getAllPlayers(this.selectedPeriod).subscribe({
+    const trimmedSearch = this.searchTerm.trim();
+
+    const request$ = trimmedSearch
+      ? this.playerService.searchPlayers(trimmedSearch, this.selectedPeriod)
+      : this.selectedMode === 'shuffle'
+      ? this.playerService.getShuffledPlayers(this.selectedPeriod)
+      : this.playerService.getAllPlayers(this.selectedPeriod);
+
+    request$.subscribe({
       next: (players: Player[]) => {
         this.players = players.map((player) => this.mapToHeatmapPlayer(player));
         this.isLoading = false;
@@ -106,15 +155,17 @@ export class MainPageComponent implements OnInit {
       position: player.position ?? '-',
       averageRating: player.averageRating ?? 0,
       ratingCount: player.ratingCount ?? 0,
-      change: player.change ?? 0
+      change: player.change ?? 0,
+      ppUrl: player.ppUrl ?? '/assets/default-player.png'
     };
   }
 
-  getColor(averageRating: number): string {
-    const rating = this.clamp(averageRating, 0, 10);
-    const t = rating / 10;
-    const hue = 0 + t * 120;
-    return `hsl(${hue} 78% 38%)`;
+  getBackgroundImage(ppUrl?: string): string {
+    if (!ppUrl) {
+      return 'url(/assets/default-player.png)';
+    }
+
+    return `url(${ppUrl})`;
   }
 
   getSizeByChange(change: number) {
@@ -141,7 +192,11 @@ export class MainPageComponent implements OnInit {
     return 'badge';
   }
 
-  private clamp(n: number, a: number, b: number): number {
-    return Math.max(a, Math.min(b, n));
+  getBorderColor(change: number): string {
+    const clamped = Math.max(-100, Math.min(100, change));
+    const hue = 60 + (clamped * 60) / 100;
+    const light = 45 + Math.min(Math.abs(change), 100) * 0.2;
+
+    return `hsl(${hue}, 85%, ${light}%)`;
   }
 }

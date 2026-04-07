@@ -29,4 +29,19 @@ export class PlayerService {
 
     return this.http.get<Player>(url);
   }
+
+  getShuffledPlayers(periodType?: string) {
+    return this.http.get<Player[]>(`${this.baseUrl}/shuffle`, {
+      params: periodType ? { periodType } : {}
+    });
+  }
+
+  searchPlayers(searchTerm?: string, periodType?: string) {
+    const params: Record<string, string> = {};
+
+    if (searchTerm) params['searchTerm'] = searchTerm;
+    if (periodType) params['periodType'] = periodType;
+
+    return this.http.get<Player[]>(`${this.baseUrl}/search`, { params });
+  }
 }
