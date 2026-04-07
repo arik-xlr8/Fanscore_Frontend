@@ -17,7 +17,7 @@ export const routes: Routes = [
     {path: '', component: MainPageComponent},
     {path: 'player/:id', component: PlayerComponent},
     {path: 'merch', component: MerchComponent},
-    {path: 'merch/productid', component: ProductComponent},
+    {path: 'merch/:productid', component: ProductComponent},
     {path: 'hali-saha', component: HaliSahaComponent},
     {path: 'hali-saha/halisahaid', component: HalisahaDetayComponent},
     {path: 'login', component: LoginComponent},

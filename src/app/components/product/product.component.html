@@ -1,1 +1,60 @@
-<p>product works!</p>
+<div class="page">
+  <div *ngIf="isLoading" class="info">
+    Yükleniyor...
+  </div>
+
+  <div *ngIf="!isLoading && errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="product && !isLoading" class="container">
+    <div class="left">
+      <img
+        class="main-img"
+        [src]="selectedImage || 'https://via.placeholder.com/600'"
+        [alt]="product.name"
+      />
+
+      <div class="thumbs" *ngIf="product.pictures.length > 1">
+        <img
+          *ngFor="let pic of product.pictures"
+          [src]="pic"
+          [alt]="product.name"
+          class="thumb"
+          [class.thumb--active]="pic === selectedImage"
+          (click)="selectImage(pic)"
+        />
+      </div>
+    </div>
+
+    <div class="right">
+      <h1 class="title">{{ product.name }}</h1>
+
+      <div class="price">
+        {{ formatPrice(product.price) }} ₺
+      </div>
+
+      <div class="meta">
+        <span *ngIf="product.teamName">🏟 {{ product.teamName }}</span>
+        <span *ngIf="product.cityName">📍 {{ product.cityName }}</span>
+        <span *ngIf="product.condition">📦 {{ product.condition }}</span>
+      </div>
+
+      <div class="seller" *ngIf="product.userName">
+        Satıcı: {{ product.userName }}
+      </div>
+
+      <div class="short" *ngIf="product.shortDescription">
+        {{ product.shortDescription }}
+      </div>
+
+      <div class="desc" *ngIf="product.description">
+        {{ product.description }}
+      </div>
+
+      <button class="btn">
+        Satıcıyla İletişime Geç
+      </button>
+    </div>
+  </div>
+</div>
