@@ -6,12 +6,15 @@ import { Player } from '../../../models/player';
 import { MatchService } from '../../services/match.service';
 import { RecentMatch } from '../../../models/recent-match';
 
+type PeriodKey = 'daily' | 'weekly' | 'monthly' | '3months' | '1year';
+
 type HeatmapPlayer = {
   id: number;
   name: string;
   team: string;
   position: string;
-  value: number;
+  averageRating: number;
+  ratingCount: number;
   change: number;
 };
 
@@ -27,13 +30,21 @@ export class MainPageComponent implements OnInit {
   private matchService = inject(MatchService);
 
   players: HeatmapPlayer[] = [];
-
-  recentMatches : RecentMatch[] = [];
-
+  recentMatches: RecentMatch[] = [];
   selectedPlayer: HeatmapPlayer | null = null;
 
   isLoading = false;
   isEnd = false;
+
+  periods: { key: PeriodKey; label: string }[] = [
+    { key: 'daily', label: 'Günlük' },
+    { key: 'weekly', label: 'Haftalık' },
+    { key: 'monthly', label: 'Aylık' },
+    { key: '3months', label: '3 Ay' },
+    { key: '1year', label: '1 Yıl' }
+  ];
+
+  selectedPeriod: PeriodKey = 'monthly';
 
   ngOnInit(): void {
     this.getPlayers();
@@ -46,9 +57,14 @@ export class MainPageComponent implements OnInit {
     this.selectedPlayer = player;
   }
 
+  selectPeriod(period: PeriodKey): void {
+    if (this.selectedPeriod === period) return;
+    this.selectedPeriod = period;
+    this.getPlayers();
+  }
+
   onHeatmapScroll(_e: Event): void {
     // Şimdilik backend'den hepsini tek seferde çekiyoruz.
-    // HTML bozulmasın diye methodu bırakıyoruz.
   }
 
   private getRecentMatches(): void {
@@ -67,7 +83,7 @@ export class MainPageComponent implements OnInit {
     this.isLoading = true;
     this.isEnd = false;
 
-    this.playerService.getAllPlayers().subscribe({
+    this.playerService.getAllPlayers(this.selectedPeriod).subscribe({
       next: (players: Player[]) => {
         this.players = players.map((player) => this.mapToHeatmapPlayer(player));
         this.isLoading = false;
@@ -86,16 +102,17 @@ export class MainPageComponent implements OnInit {
     return {
       id: player.playerId,
       name: `${player.name} ${player.surname}`,
-      team: player.teamId != null ? `Team ${player.teamId}` : 'No Team',
+      team: player.teamName ?? '-',
       position: player.position ?? '-',
-      value: player.age ?? 0,
-      change: 0
+      averageRating: player.averageRating ?? 0,
+      ratingCount: player.ratingCount ?? 0,
+      change: player.change ?? 0
     };
   }
 
-  getColor(change: number): string {
-    const c = this.clamp(change, -10, 10);
-    const t = (c + 10) / 20;
+  getColor(averageRating: number): string {
+    const rating = this.clamp(averageRating, 0, 10);
+    const t = rating / 10;
     const hue = 0 + t * 120;
     return `hsl(${hue} 78% 38%)`;
   }
@@ -103,15 +120,25 @@ export class MainPageComponent implements OnInit {
   getSizeByChange(change: number) {
     const abs = Math.abs(change);
 
-    if (abs >= 6) return { col: 3, row: 22 };
-    if (abs >= 4) return { col: 3, row: 18 };
-    if (abs >= 2) return { col: 2, row: 14 };
+    if (abs >= 50) return { col: 3, row: 22 };
+    if (abs >= 30) return { col: 3, row: 18 };
+    if (abs >= 15) return { col: 2, row: 14 };
     return { col: 2, row: 10 };
+  }
+
+  formatAverageRating(averageRating: number): string {
+    return averageRating.toFixed(1);
   }
 
   formatChange(change: number): string {
     const sign = change > 0 ? '+' : '';
     return `${sign}${change.toFixed(1)}%`;
+  }
+
+  getChangeClass(change: number): string {
+    if (change > 0) return 'badge badge--up';
+    if (change < 0) return 'badge badge--down';
+    return 'badge';
   }
 
   private clamp(n: number, a: number, b: number): number {
