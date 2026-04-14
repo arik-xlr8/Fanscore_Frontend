@@ -1,1 +1,89 @@
-<p>halisaha-detay works!</p>
+<div class="page">
+  <div class="container">
+    <div *ngIf="isLoading" class="stateBox">
+      Halı saha ilanı yükleniyor...
+    </div>
+
+    <div *ngIf="errorMessage && !isLoading" class="stateBox stateBox--error">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="tournament && !isLoading" class="detail-card">
+      <div class="left">
+        <img
+          class="main-img"
+          src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1200&q=80"
+          [alt]="tournament.name"
+        />
+      </div>
+
+      <div class="right">
+        <div class="topRow">
+          <div>
+            <h1 class="title">{{ tournament.name }}</h1>
+            <div class="sub">
+              {{ tournament.city }} • {{ formatDate(tournament.createdAt) }}
+            </div>
+          </div>
+
+          <div class="priceBox">
+            <div class="priceLabel">Maç Ücreti</div>
+            <div class="price">{{ formatPrice(tournament.price) }} ₺</div>
+          </div>
+        </div>
+
+        <div class="chips">
+          <span class="chip">{{ formatTeamSize(tournament.teamSize) }}</span>
+          <span class="chip chip--muted">{{ tournament.city }}</span>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Açıklama</div>
+          <p class="desc">
+            {{ tournament.description || 'Bu ilan için açıklama girilmemiş.' }}
+          </p>
+        </div>
+
+        <div class="section seller-card">
+          <div class="section-title">İlan Sahibi</div>
+
+          <div class="seller-header">
+            <img
+              [src]="tournament.userProfilePic || 'https://via.placeholder.com/80'"
+              alt="Kullanıcı profil fotoğrafı"
+              class="seller-avatar"
+            />
+
+            <div class="seller-info">
+              <div class="seller-name">
+                {{ tournament.userName || 'Bilinmeyen kullanıcı' }}
+              </div>
+
+              <div class="seller-phone" *ngIf="tournament.phoneNumber">
+                Telefon: {{ tournament.phoneNumber }}
+              </div>
+
+              <div class="seller-phone seller-phone--muted" *ngIf="!tournament.phoneNumber">
+                Telefon bilgisi girilmemiş
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a routerLink="/halisaha" class="btn btn--secondary">
+            Geri Dön
+          </a>
+
+          <a
+            *ngIf="tournament.phoneNumber"
+            class="btn"
+            [href]="'tel:' + tournament.phoneNumber"
+          >
+            Ara
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

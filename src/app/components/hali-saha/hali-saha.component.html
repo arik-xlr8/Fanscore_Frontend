@@ -11,7 +11,10 @@
 
         <div class="heroTools">
           <div class="search">
-            <input [(ngModel)]="query" placeholder="Halı saha, konum, 7v7, kaleci..." />
+            <input
+              [(ngModel)]="query"
+              placeholder="Halı saha, şehir, açıklama, kullanıcı ara..."
+            />
             <div class="searchIcon">⌕</div>
           </div>
 
@@ -25,44 +28,61 @@
           </div>
         </div>
       </div>
-
-      <div class="chips">
-        <button
-          type="button"
-          class="chip"
-          *ngFor="let t of timeTags"
-          [class.chip--active]="t === selectedTime"
-          (click)="selectedTime = t"
-        >
-          {{ t }}
-        </button>
-      </div>
     </section>
 
-    <section class="grid">
+    <div *ngIf="isLoading" class="stateBox">
+      Halı saha ilanları yükleniyor...
+    </div>
+
+    <div *ngIf="errorMessage && !isLoading" class="stateBox stateBox--error">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && filteredItems.length === 0" class="stateBox">
+      Aramana uygun ilan bulunamadı.
+    </div>
+
+    <section class="grid" *ngIf="!isLoading && !errorMessage && filteredItems.length > 0">
       <article class="card" *ngFor="let item of filteredItems; trackBy: trackByItemId">
         <div class="imgWrap">
-          <img [src]="item.imageUrl" [alt]="item.name" />
+          <img
+            src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1200&q=80"
+            [alt]="item.name"
+          />
+
           <div class="badgeRow">
-            <div class="badge">{{ item.timeTag }}</div>
-            <div class="badge badge--muted">{{ item.pitch }}</div>
+            <div class="badge">{{ formatTeamSize(item.teamSize) }}</div>
+            <div class="badge badge--muted">{{ item.city }}</div>
           </div>
-          <div class="loc">{{ item.location }}</div>
+
+          <div class="loc">
+            {{ formatDate(item.createdAt) }}
+          </div>
         </div>
 
         <div class="body">
           <div class="name">{{ item.name }}</div>
-          <div class="desc">{{ item.desc }}</div>
+
+          <div class="desc">
+            {{ item.description || 'Açıklama girilmemiş.' }}
+          </div>
+
+          <div class="meta">
+            <span>Oluşturan: {{ item.userName || 'Bilinmeyen kullanıcı' }}</span>
+          </div>
 
           <div class="bottom">
             <div class="price">
-              <div class="k">Saatlik</div>
-              <div class="v">{{ formatPrice(item.pricePerHour) }} ₺</div>
+              <div class="k">Maç Ücreti</div>
+              <div class="v">{{ formatPrice(item.price) }} ₺</div>
             </div>
 
-            <button type="button" class="btn" (click)="contact(item)">
-              İletişim Kur
-            </button>
+            <a
+              class="btn"
+              [routerLink]="['/halisaha', item.haliSahaId]"
+            >
+              Detayı Gör
+            </a>
           </div>
         </div>
       </article>

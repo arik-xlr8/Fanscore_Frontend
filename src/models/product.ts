@@ -38,6 +38,7 @@ export interface ProductDetail {
   userId: number;
   userName?: string | null;
   userProfilePic?: string | null;
+  phoneNumber?: string | null;
 
   teamId?: number | null;
   teamName?: string | null;

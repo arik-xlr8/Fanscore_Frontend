@@ -1,28 +1,26 @@
 <div class="page">
-  <div *ngIf="isLoading" class="info">
-    Yükleniyor...
-  </div>
+  <div *ngIf="isLoading">Yükleniyor...</div>
 
-  <div *ngIf="!isLoading && errorMessage" class="error">
+  <div *ngIf="errorMessage && !isLoading" class="error">
     {{ errorMessage }}
   </div>
 
   <div *ngIf="product && !isLoading" class="container">
     <div class="left">
       <img
-        class="main-img"
-        [src]="selectedImage || 'https://via.placeholder.com/600'"
+        [src]="selectedImage"
         [alt]="product.name"
+        class="main-img"
       />
 
-      <div class="thumbs" *ngIf="product.pictures.length > 1">
+      <div class="thumbs" *ngIf="product.pictures?.length">
         <img
-          *ngFor="let pic of product.pictures"
-          [src]="pic"
+          *ngFor="let image of product.pictures"
+          [src]="image"
           [alt]="product.name"
           class="thumb"
-          [class.thumb--active]="pic === selectedImage"
-          (click)="selectImage(pic)"
+          [class.thumb--active]="selectedImage === image"
+          (click)="selectImage(image)"
         />
       </div>
     </div>
@@ -30,18 +28,36 @@
     <div class="right">
       <h1 class="title">{{ product.name }}</h1>
 
-      <div class="price">
-        {{ formatPrice(product.price) }} ₺
-      </div>
+      <div class="price">{{ formatPrice(product.price) }} ₺</div>
 
       <div class="meta">
-        <span *ngIf="product.teamName">🏟 {{ product.teamName }}</span>
-        <span *ngIf="product.cityName">📍 {{ product.cityName }}</span>
-        <span *ngIf="product.condition">📦 {{ product.condition }}</span>
+        <span *ngIf="product.condition">Durum: {{ product.condition }}</span>
+        <span *ngIf="product.cityName">Şehir: {{ product.cityName }}</span>
+        <span *ngIf="product.teamName">Takım: {{ product.teamName }}</span>
       </div>
 
-      <div class="seller" *ngIf="product.userName">
-        Satıcı: {{ product.userName }}
+      <div class="seller-card">
+        <div class="seller-header">
+          <img
+            [src]="product.userProfilePic || 'https://via.placeholder.com/60'"
+            alt="Satıcı profil fotoğrafı"
+            class="seller-avatar"
+          />
+
+          <div class="seller-info">
+            <div class="seller-name">
+              {{ product.userName || 'Bilinmeyen kullanıcı' }}
+            </div>
+
+            <div class="seller-phone" *ngIf="product.phoneNumber">
+              Telefon: {{ product.phoneNumber }}
+            </div>
+
+            <div class="seller-phone seller-phone--muted" *ngIf="!product.phoneNumber">
+              Telefon bilgisi yok
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="short" *ngIf="product.shortDescription">
@@ -52,7 +68,11 @@
         {{ product.description }}
       </div>
 
-      <button class="btn">
+      <button
+        class="btn"
+        *ngIf="product.phoneNumber"
+        type="button"
+      >
         Satıcıyla İletişime Geç
       </button>
     </div>
