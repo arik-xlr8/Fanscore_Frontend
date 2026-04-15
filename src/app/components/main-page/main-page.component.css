@@ -235,6 +235,7 @@ a{
   display: flex;
   gap: 8px;
   margin-right: 12px;
+  align-items: center;
 }
 
 .heatmap-filters {
@@ -331,12 +332,13 @@ a{
 .filter-btn {
   height: 38px;
   padding: 0 16px;
-  border-radius: 999px;
+  border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.05);
-  color: #e8edf2;
+  color: #6d6d6d;
   cursor: pointer;
   transition: 0.2s ease;
+  font-weight: 600;
 }
 
 .filter-btn:hover {
@@ -345,8 +347,8 @@ a{
 
 .filter-btn--active {
   background: rgba(186, 255, 120, 0.14);
-  border-color: rgba(186, 255, 120, 0.4);
-  color: #61bd00;
+  border-color: rgba(53, 109, 0, 0.4);
+  color: #5db400;
 }
 
 .tile {
