@@ -1,14 +1,14 @@
 <div class="rating-panel">
   <div class="rating-panel__header">
-    <h3 class="rating-panel__title">Oy Ver</h3>
+    <h3 class="rating-panel__title">Fiyat Tahmini Yap</h3>
     <p class="rating-panel__subtitle">
-      Oyuncunun piyasa değeri sizce bu zaman aralığında kaç eder?
+      Oyuncunun piyasa değeri seçtiğiniz zaman aralığında kaç milyon € eder?
     </p>
   </div>
 
   <div class="rating-panel__body">
     <div class="form-group">
-      <label for="periodType">Zaman Aralığı</label>
+      <label for="periodType">Zaman Aralığı (Geçtiğimiz) </label>
       <select
         id="periodType"
         class="input"
@@ -22,17 +22,17 @@
     </div>
 
     <div class="form-group">
-      <label for="ratingValue">Değer / Puan</label>
+      <label for="ratingValue">Değer (€)</label>
       <input
         id="ratingValue"
         type="number"
         class="input"
         min="0"
-        max="100"
+        max="300"
         step="0.1"
         [(ngModel)]="ratingValue"
         (blur)="clampRating()"
-        placeholder="Örn: 55"
+        placeholder="Milyondan küçük değerler için ondalıklı girebilirsiniz Örn: 0.5"
       />
     </div>
 

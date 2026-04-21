@@ -93,12 +93,14 @@
         </div>
 
         <div class="tile-bottom">
-          <div class="name">{{ player.name }}</div>
-          <div class="sub">
-            {{ player.position }} • Puan: {{ formatAverageRating(player.averageRating) }}
-          </div>
-          <div class="sub">
-            Oy: {{ player.ratingCount }}
+          <div class="player-specs">
+            <div class="name">{{ player.name }}</div>
+            <div class="sub">
+              {{ player.position }} • Puan: {{ formatAverageRating(player.averageRating) }}
+            </div>
+            <div class="sub">
+              Oy: {{ player.ratingCount }}
+            </div>
           </div>
         </div>
       </div>

@@ -2,12 +2,7 @@
 
 .page{
   min-height:100vh;
-  padding:22px;
-  background:
-    radial-gradient(900px 520px at 18% 12%, rgba(40,245,154,.14), transparent 60%),
-    radial-gradient(900px 520px at 92% 18%, rgba(45,130,255,.12), transparent 58%),
-    radial-gradient(700px 480px at 50% 92%, rgba(255,77,109,.10), transparent 62%),
-    #f6f8fb;
+  padding:100px 22px 22px 22px;
   color: rgba(12, 20, 32, .92);
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
 }
@@ -31,10 +26,10 @@
 .profile, .vote, .blog, .comments{padding:16px}
 
 .profileTop{
-  display:grid;
-  grid-template-columns: 160px 1fr 320px;
+  display:flex;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap:16px;
-  align-items:start;
 }
 
 .avatar{
@@ -44,15 +39,22 @@
   overflow:hidden;
   border:1px solid rgba(15, 23, 42, .10);
   background: rgba(15, 23, 42, .03);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .avatar img{
-  width:100%;
-  height:100%;
+  height: 100%;
   object-fit:cover;
 }
 
-.meta{display:flex;flex-direction:column;gap:12px}
+.meta{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  width: 80%;
+}
 
 .nameRow{
   display:flex;
@@ -63,32 +65,30 @@
 }
 
 .name{
-  font-weight:900;
+  font-weight:800;
   font-size:28px;
   letter-spacing:.2px;
   color: rgba(10, 18, 32, .94);
 }
 
 .pill{
-  font-size:12px;
+  font-size:18px;
   font-weight:900;
-  padding:7px 10px;
-  border-radius:999px;
-  border:1px solid rgba(15, 23, 42, .14);
-  background: rgba(15, 23, 42, .03);
+  padding:8px 15px;
+  border-radius:10px;
+  border:3px solid rgba(15, 23, 42, .14);
+  background: white;
   color: rgba(10, 18, 32, .78);
 }
 
 .pill--up{
-  border-color: rgba(16,185,129,.28);
-  background: rgba(16,185,129,.10);
-  color: rgba(6, 95, 70, .95);
+  border-color: greenyellow;
+  color: green;
 }
 
 .pill--down{
-  border-color: rgba(244,63,94,.28);
-  background: rgba(244,63,94,.10);
-  color: rgba(159, 18, 57, .95);
+  border-color: rgb(255, 0, 43);
+  color: rgb(159, 18, 58);
 }
 
 .subRow{
@@ -100,7 +100,7 @@
 .chip{
   padding:8px 10px;
   border-radius:14px;
-  border:1px solid rgba(15, 23, 42, .12);
+  border:2px solid rgb(228, 228, 228);
   background: rgba(255,255,255,.75);
   color: rgba(10, 18, 32, .80);
   font-size:13px;
@@ -403,9 +403,11 @@
 }
 
 .sectionTitle{
-  font-size:18px;
-  font-weight:900;
+  font-size:24px;
+  font-weight:700;
   color: rgba(10,18,32,.92);
+  margin-top: 100px;
+  margin-bottom: 20px;
 }
 
 .sectionHint{
@@ -472,8 +474,10 @@
 }
 
 .commentList{
-  display:grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap:12px;
 }
 
@@ -485,6 +489,8 @@
   display:flex;
   flex-direction:column;
   gap:10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .commentTop{
@@ -492,6 +498,10 @@
   align-items:center;
   justify-content:space-between;
   gap:10px;
+  font-weight: 500;
+  font-size: 14px;
+  border-bottom: 1px solid grey;
+  padding-bottom: 5px;
 }
 
 .who{
@@ -537,7 +547,8 @@
 .commentText{
   color: rgba(10,18,32,.74);
   line-height:1.65;
-  font-weight:650;
+  font-weight:400;
+  padding: 20px 0px;
 }
 
 .commentForm{
@@ -561,6 +572,43 @@
   gap:10px;
   align-items:center;
   flex-wrap:wrap;
+}
+
+.commentActions{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+}
+
+.reactionBtn{
+  background-color: white;
+  outline: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.reactionBtn:hover i{
+  transform: translateY(-2px);
+}
+
+.fa-thumbs-up{
+  color: rgb(0, 161, 0);
+}
+
+.fa-thumbs-down{
+  color: red;
+}
+
+i{
+  margin-right: 5px;
+  transition: 0.2s;
+}
+
+.commentUser{
+  color: rgb(0, 150, 0);
 }
 
 .formRow .btn{white-space:nowrap}
@@ -600,25 +648,15 @@
   background: transparent;
   color: rgb(61, 61, 61);
   cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
 }
 
 .filterBtn--active {
-  background: rgb(253, 190, 18);
-  color: black;
+  background: white;
+  color: green;
+  border: 2px solid greenyellow;
+  text-decoration: underline;
 }
 
-.pill {
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.08);
-  font-size: 12px;
-  font-weight: 700;
-}
 
-.pill--up {
-  background: rgba(0, 255, 140, 0.18);
-}
-
-.pill--down {
-  background: rgba(255, 80, 80, 0.18);
-}

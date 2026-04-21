@@ -61,20 +61,20 @@
                 <span>Giriş Yap</span>
             </a>
 
-            <a style="background-color: rgb(27, 165, 0);" *ngIf="isLoggedIn$ | async" routerLink="/profile" class="login-btn btn-style">
+            <a *ngIf="isLoggedIn$ | async" routerLink="/profile" class="login-btn btn-style">
                 <i style="margin-right: 7px; font-size: 14px;" class="fa-solid fa-user"></i>
                 <span>Profil</span>
             </a>
 
-            <a (click)="onLogout()" style="background-color: red;" *ngIf="isLoggedIn$ | async" routerLink="/login" class="login-btn btn-style">
-                <i style="margin-right: 7px; font-size: 14px;" class="fa-solid fa-user"></i>
+            <a (click)="onLogout()" style="color: red;" *ngIf="isLoggedIn$ | async" routerLink="/login" class="login-btn btn-style">
+                <i style="margin-right: 7px; font-size: 14px;" class="fa-solid fa-right-from-bracket"></i>
                 <span>Çıkış Yap</span>
             </a>
         </div>
     </nav>
 </header>
 
-<header style="opacity: 0; pointer-events: none; position: relative; z-index: 0;">
+<!-- <header style="opacity: 0; pointer-events: none; position: relative; z-index: 0; height: 100px;">
     <nav>
         <div class="left-header part-header">
             <a routerLink="/" class="logo-container d">
@@ -122,4 +122,4 @@
             </a>
         </div>
     </nav>
-</header>
+</header> -->

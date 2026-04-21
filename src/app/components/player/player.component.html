@@ -38,8 +38,8 @@
 
             <div class="quickStats">
               <div class="stat">
-                <div class="k">Ortalama Puan</div>
-                <div class="v">{{ formatAverageRating(averageRating) }}</div>
+                <div class="k">Ortalama Fiyat</div>
+                <div class="v">{{ formatAverageRating(averageRating) }} €</div>
               </div>
 
               <div class="stat">
@@ -94,7 +94,7 @@
                   [disabled]="comment.isReacting"
                   (click)="likeComment(comment)"
                 >
-                  👍 {{ comment.likeCount }}
+                  <i class="fa-solid fa-thumbs-up"></i> {{ comment.likeCount }}
                 </button>
 
                 <button
@@ -104,7 +104,7 @@
                   [disabled]="comment.isReacting"
                   (click)="dislikeComment(comment)"
                 >
-                  👎 {{ comment.dislikeCount }}
+                  <i class="fa-solid fa-thumbs-down"></i> {{ comment.dislikeCount }}
                 </button>
               </div>
             </div>

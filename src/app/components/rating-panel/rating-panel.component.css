@@ -3,6 +3,8 @@
   flex-direction: column;
   gap: 18px;
   color: rgb(0, 0, 0);
+  margin-top: 20px;
+  justify-content: center;
 }
 
 .rating-panel__header {
@@ -27,6 +29,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  width: 50%;
 }
 
 .form-group {
@@ -42,34 +45,38 @@
 
 .input {
   width: 100%;
-  border: 1px solid rgba(255,255,255,0.14);
+  border: 2px solid rgb(230, 230, 230);
   background: rgba(255,255,255,0.05);
   color: black;
   border-radius: 12px;
-  padding: 12px 14px;
+  padding: 12px 15px;
   outline: none;
   font: inherit;
   box-sizing: border-box;
 }
 
 .input::placeholder {
-  color: rgba(255,255,255,0.45);
+  color: rgb(122, 122, 122);
+  font-size: 14px;
 }
 
 .textarea {
-  resize: vertical;
+  resize: none;
   min-height: 100px;
+  overflow: auto;
 }
 
 .vote-info {
   border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.04);
   border-radius: 12px;
-  padding: 12px 14px;
+  padding-top: 15px;
 }
 
 .vote-info__message {
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
+  color: grey;
   opacity: 0.9;
 }
 
@@ -82,18 +89,27 @@
 .btn {
   border: none;
   border-radius: 12px;
-  padding: 10px 16px;
+  padding: 9px 18px;
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn--secondary {
   background: rgba(255,255,255,0.08);
-  color: black;
+  color: rgb(255, 0, 0);
 }
 
 .btn--primary {
   background: white;
-  color: black;
+  color: rgb(16, 97, 0);
+  border: 2px solid green;
+  transition: 0.15s;
+}
+
+.btn--primary:hover{
+  background-color: rgb(242, 255, 240);
 }
