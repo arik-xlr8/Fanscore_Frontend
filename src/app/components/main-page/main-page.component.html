@@ -2,28 +2,7 @@
 
   <section class="heatmap-wrap" (scroll)="onHeatmapScroll($event)">
 
-    <div class="top-tools">
-      <div class="search-box">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
 
-        <input
-          type="text"
-          class="search-input"
-          placeholder="Oyuncu veya takım ara..."
-          [value]="searchTerm"
-          (input)="onSearchInput($event)"
-        />
-
-        <button
-          *ngIf="searchTerm"
-          type="button"
-          class="clear-search-btn"
-          (click)="clearSearch()"
-        >
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-    </div>
 
     <div class="heatmap-filters">
 
@@ -60,6 +39,33 @@
       >
         {{ period.label }}
       </button>
+
+      <div class="top-tools">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+          <div style="position: relative;">
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Oyuncu veya takım ara..."
+              [value]="searchTerm"
+              (input)="onSearchInput($event)"
+            />
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+
+
+          <button
+            *ngIf="searchTerm"
+            type="button"
+            class="clear-search-btn"
+            (click)="clearSearch()"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="heatmap">
@@ -73,7 +79,7 @@
           'background-size': 'contain',
           'background-position': 'center',
           'background-repeat': 'no-repeat',
-          'box-shadow': 'inset 0 0 0 2px ' + getBorderColor(player.change),
+          'box-shadow': 'inset 0 0 0 6px ' + getBorderColor(player.change),
           'grid-column': 'span ' + getSizeByChange(player.change).col,
           'grid-row': 'span ' + getSizeByChange(player.change).row
         }"
@@ -112,7 +118,7 @@
     </div>
   </section>
 
-  <aside class="side-panel">
+  <!-- <aside class="side-panel">
 
     <div class="side-header">
       <h2>
@@ -143,6 +149,6 @@
       </div>
     </div>
 
-  </aside>
+  </aside> -->
 
 </div>

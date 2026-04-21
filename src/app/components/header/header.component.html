@@ -1,5 +1,8 @@
-<header style="position: fixed; z-index: 1; width: 100%;">
+<header class="main-header">
     <nav>
+      <div class="bg">
+
+      </div>
         <div class="left-header part-header">
             <a routerLink="/" class="logo-container d">
                 <img src="../../../assets/images/Fanscore Logo.png" alt="">
@@ -18,9 +21,9 @@
         </div>
 
         <div class="right-header part-header d">
-            <div class="search-container">
+            <!-- <div class="search-container">
                 <input type="text" placeholder="🔍 Bir Oyuncu veya Takım Arayın...">
-            </div>
+            </div> -->
 
             <div class="trend-ratio">
 
@@ -40,6 +43,18 @@
                     🔥 Trendler
                 </div>
             </div> -->
+
+
+
+            <a  routerLink="/teams" class="teams-btn btn-style">
+                <i style="margin-right: 7px; font-size: 14px;" class="fa-solid fa-shirt"></i>
+                <span>Tüm Takımlar</span>
+            </a>
+
+            <a  routerLink="/last-matches" class="l-m-btn btn-style">
+                <i style="margin-right: 7px; font-size: 14px;" class="fa-solid fa-futbol"></i>
+                <span>Son Maçlar</span>
+            </a>
 
             <a *ngIf="!(isLoggedIn$ | async)" routerLink="/login" class="login-btn btn-style">
                 <i style="margin-right: 7px; font-size: 14px;" class="fa-solid fa-user"></i>
