@@ -1,0 +1,102 @@
+<div class="page">
+  <div class="shell">
+    <section class="hero">
+      <div class="heroTop">
+        <div>
+          <div class="title">Halı Saha Oluştur</div>
+          <div class="subtitle">
+            Yeni bir maç ilanı aç, şehir ve takım boyutunu belirle, oyuncular seni kolayca bulsun.
+          </div>
+        </div>
+
+        <a routerLink="/halisaha" class="backBtn">
+          ← İlanlara Dön
+        </a>
+      </div>
+    </section>
+
+    <section class="formCard">
+      <form class="form" (ngSubmit)="onSubmit()">
+        <div class="fieldGrid">
+          <div class="field field--full">
+            <label for="name">Maç Adı</label>
+            <input
+              id="name"
+              type="text"
+              name="name"
+              [(ngModel)]="model.name"
+              placeholder="Örn: Cumartesi Akşam 8'e 8 Maç"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="city">Şehir</label>
+            <input
+              id="city"
+              type="text"
+              name="city"
+              [(ngModel)]="model.city"
+              placeholder="Örn: Antalya"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="teamSize">Takım Boyutu</label>
+            <input
+              id="teamSize"
+              type="number"
+              name="teamSize"
+              [(ngModel)]="model.teamSize"
+              min="1"
+              placeholder="Örn: 10"
+              required
+            />
+          </div>
+
+          <div class="field field--full">
+            <label for="price">Maç Ücreti (₺)</label>
+            <input
+              id="price"
+              type="number"
+              name="price"
+              [(ngModel)]="model.price"
+              min="0"
+              step="0.01"
+              placeholder="Örn: 150"
+              required
+            />
+          </div>
+
+          <div class="field field--full">
+            <label for="description">Açıklama</label>
+            <textarea
+              id="description"
+              name="description"
+              [(ngModel)]="model.description"
+              rows="6"
+              placeholder="Saat, konum, eksik oyuncu sayısı, zemin türü gibi detayları yaz..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div *ngIf="error" class="stateBox stateBox--error">
+          {{ error }}
+        </div>
+
+        <div *ngIf="success" class="stateBox stateBox--success">
+          {{ success }}
+        </div>
+
+        <div class="actions">
+          <a routerLink="/halisaha" class="ghostBtn">Vazgeç</a>
+
+          <button type="submit" class="submitBtn" [disabled]="loading">
+            {{ loading ? 'Oluşturuluyor...' : 'İlanı Oluştur' }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>

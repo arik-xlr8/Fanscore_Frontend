@@ -12,6 +12,7 @@ import { ProductComponent } from './components/product/product.component';
 import { TeamDetailsComponent } from './components/team-details/team-details.component';
 import { TeamsComponent } from './components/teams/teams.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { HalisahaCreateComponent } from './components/halisaha-create/halisaha-create.component';
 
 export const routes: Routes = [
     {path: '', component: MainPageComponent},
@@ -26,5 +27,6 @@ export const routes: Routes = [
     {path: 'admin-panel', component: AdminPanelComponent},
     {path: 'teams', component: TeamsComponent},
     {path: 'teams/:teamid', component: TeamDetailsComponent},
-    {path: 'profile', component: ProfileComponent}
+    {path: 'profile', component: ProfileComponent},
+    {path: 'halisaha-create', component: HalisahaCreateComponent}
 ];
