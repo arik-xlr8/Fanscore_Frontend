@@ -1,0 +1,136 @@
+<div class="page">
+  <div class="shell">
+    <section class="hero">
+      <div class="heroTop">
+        <div>
+          <div class="title">Ürün İlanı Oluştur</div>
+          <div class="subtitle">
+            Taraftar ürününü satışa çıkar, şehir, takım ve ürün durumunu belirle.
+          </div>
+        </div>
+
+        <a routerLink="/merch" class="backBtn">
+          ← Ürünlere Dön
+        </a>
+      </div>
+    </section>
+
+    <section class="formCard">
+      <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="fieldGrid">
+          <div class="field field--full">
+            <label>Ürün Adı</label>
+            <input formControlName="name" placeholder="Örn: Galatasaray 2023 Forma" />
+            <small *ngIf="form.controls.name.touched && form.controls.name.invalid">
+              Ürün adı zorunludur.
+            </small>
+          </div>
+
+          <div class="field">
+            <label>Fiyat (₺)</label>
+            <input type="number" formControlName="price" min="1" step="0.01" placeholder="Örn: 1250" />
+            <small *ngIf="form.controls.price.touched && form.controls.price.invalid">
+              Fiyat zorunludur.
+            </small>
+          </div>
+
+          <div class="field">
+            <label>Durum</label>
+            <select formControlName="condition">
+              <option *ngFor="let c of conditions" [value]="c">{{ c }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Şehir</label>
+            <select formControlName="cityId">
+              <option [ngValue]="null">
+                {{ cities.length === 0 ? 'Şehirler yüklenemedi' : 'Şehir seç' }}
+              </option>
+              <option *ngFor="let c of cities" [ngValue]="c.cityId">
+                {{ c.cityName }}
+              </option>
+            </select>
+            <small *ngIf="form.controls.cityId.touched && form.controls.cityId.invalid">
+              Şehir seçmek zorunludur.
+            </small>
+          </div>
+
+          <div class="field">
+            <label>Takım</label>
+            <select formControlName="teamId">
+              <option [ngValue]="null">Takım yok</option>
+              <option *ngFor="let t of teams" [ngValue]="t.teamId">
+                {{ t.teamName }}
+              </option>
+            </select>
+          </div>
+
+          <div class="field field--full">
+            <label>Kısa Açıklama</label>
+            <input formControlName="shortDescription" placeholder="Kartta gözükecek kısa açıklama" />
+          </div>
+
+          <div class="field field--full">
+            <label>Açıklama</label>
+            <textarea
+              formControlName="description"
+              rows="6"
+              placeholder="Ürünün durumu, beden, teslimat, orijinallik gibi detayları yaz..."
+            ></textarea>
+          </div>
+
+          <div class="field field--full">
+            <div class="pictureHeader">
+              <label>Fotoğraflar</label>
+              <button type="button" class="smallBtn" (click)="addFileInput()">
+                {{ fileInputs.length === 0 ? '+ Foto Ekle' : 'Foto Sayısını Arttır' }}
+              </button>
+            </div>
+
+            <div *ngIf="fileInputs.length === 0" class="photoHint">
+              Fotoğraf eklemek zorunlu değil. İstersen ekleyebilirsin.
+            </div>
+
+            <div class="pictureList" *ngIf="fileInputs.length > 0">
+              <div
+                class="pictureRow"
+                *ngFor="let input of fileInputs; let i = index; trackBy: trackByFileInputId"
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  (change)="onSingleFileSelected($event, i)"
+                />
+
+                <button type="button" class="removeBtn" (click)="removeFileInput(i)">
+                  Sil
+                </button>
+
+                <div class="selectedFileName" *ngIf="input.file">
+                  Seçilen dosya: {{ input.file.name }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="stateBox stateBox--error">
+          {{ errorMessage }}
+        </div>
+
+        <div class="actions">
+          <a routerLink="/merch" class="ghostBtn">Vazgeç</a>
+
+          <button
+            type="submit"
+            class="submitBtn"
+            [disabled]="form.invalid || isSubmitting"
+          >
+            {{ isSubmitting ? 'Oluşturuluyor...' : 'İlanı Oluştur' }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>

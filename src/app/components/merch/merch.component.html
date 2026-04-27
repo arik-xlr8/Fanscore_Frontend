@@ -1,55 +1,228 @@
 <div class="page">
   <div class="shell">
-    <div class="hero">
-      <h1 class="title">Ürünler</h1>
-      <p class="subtitle">
-        Kullanıcıların listelediği tüm ürünleri burada görebilirsin.
-      </p>
-    </div>
+    <section class="hero">
+      <div class="heroTop">
+        <div>
+          <div class="title">
+            Ürünler
 
-    <div *ngIf="isLoading" class="infoBox">
-      Ürünler yükleniyor...
-    </div>
+            <span routerLink="/create-product" class="create">+</span>
 
-    <div *ngIf="!isLoading && errorMessage" class="infoBox error">
-      {{ errorMessage }}
-    </div>
+            <button
+              type="button"
+              class="mineFilterBtn"
+              [class.mineFilterBtn--active]="showOnlyMine"
+              (click)="toggleMyProducts()"
+            >
+              {{ showOnlyMine ? 'Tüm Ürünler' : 'Ürünlerimi Filtrele' }}
+            </button>
+          </div>
 
-    <div *ngIf="!isLoading && !errorMessage && products.length === 0" class="infoBox">
-      Henüz listelenmiş ürün yok.
-    </div>
-
-    <div class="grid" *ngIf="!isLoading && !errorMessage && products.length > 0">
-      <div class="card" [routerLink]="['/merch', product.productId]" *ngFor="let product of products; trackBy: trackByProductId">
-        <div class="imgWrap">
-          <img
-            [src]="product.mainPicUrl || 'https://via.placeholder.com/600x600?text=Urun'"
-            [alt]="product.name"
-          />
+          <div class="subtitle">
+            Kullanıcıların listelediği taraftar ürünlerini keşfet, detayları incele ve satıcıyla iletişime geç.
+          </div>
         </div>
 
-        <div class="body">
-          <div class="cardTitle">{{ product.name }}</div>
-
-          <div class="desc" *ngIf="product.shortDescription">
-            {{ product.shortDescription }}
-          </div>
-
-          <div class="meta">
-            <span class="pill" *ngIf="product.teamName">{{ product.teamName }}</span>
-            <span class="pill" *ngIf="product.cityName">{{ product.cityName }}</span>
-            <span class="pill" *ngIf="product.condition">{{ product.condition }}</span>
-          </div>
-
-          <div class="seller" *ngIf="product.userName">
-            Satıcı: {{ product.userName }}
-          </div>
-
-          <div class="priceRow">
-            <span class="price">{{ formatPrice(product.price) }} ₺</span>
+        <div class="heroTools">
+          <div class="search">
+            <input
+              [(ngModel)]="query"
+              placeholder="Ürün, takım, şehir, satıcı ara..."
+            />
+            <div class="searchIcon">⌕</div>
           </div>
         </div>
       </div>
+    </section>
+
+    <div *ngIf="isLoading" class="stateBox">
+      Ürünler yükleniyor...
     </div>
+
+    <div *ngIf="!isLoading && errorMessage" class="stateBox stateBox--error">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && filteredProducts.length === 0" class="stateBox">
+      Henüz listelenmiş ürün yok.
+    </div>
+
+    <section class="grid" *ngIf="!isLoading && !errorMessage && filteredProducts.length > 0">
+      <article
+        class="card"
+        *ngFor="let product of filteredProducts; trackBy: trackByProductId"
+      >
+        <div class="imgWrap">
+          <img
+            [src]="product.mainPicUrl || 'https://via.placeholder.com/800x600?text=FanScore+Urun'"
+            [alt]="product.name"
+          />
+
+          <div class="badgeRow">
+            <div class="badge" *ngIf="product.condition">
+              {{ formatCondition(product.condition) }}
+            </div>
+
+            <div class="badge badge--muted" *ngIf="product.cityName">
+              {{ product.cityName }}
+            </div>
+          </div>
+
+          <div class="loc" *ngIf="product.teamName">
+            {{ product.teamName }}
+          </div>
+        </div>
+
+        <div class="body">
+          <div class="name">{{ product.name }}</div>
+
+          <div class="desc">
+            {{ product.shortDescription || 'Bu ürün için kısa açıklama girilmemiş.' }}
+          </div>
+
+          <div class="meta">
+            <span>Satıcı: {{ product.userName || 'Bilinmeyen kullanıcı' }}</span>
+          </div>
+
+          <div class="ownerActions" *ngIf="showOnlyMine">
+            <button type="button" class="editBtn" (click)="openEdit(product, $event)">
+              Düzenle
+            </button>
+
+            <button type="button" class="deleteBtn" (click)="deleteProduct(product, $event)">
+              Sil
+            </button>
+          </div>
+
+          <div class="bottom">
+            <div class="price">
+              <div class="k">Ürün Fiyatı</div>
+              <div class="v">{{ formatPrice(product.price) }} ₺</div>
+            </div>
+
+            <a
+              class="btn"
+              [routerLink]="['/merch', product.productId]"
+            >
+              Detayı Gör
+            </a>
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>
+</div>
+
+<div class="modalOverlay" *ngIf="isEditOpen" (click)="closeEdit()">
+  <div class="editModal" (click)="$event.stopPropagation()">
+    <div class="modalHead">
+      <div>
+        <h2>Ürünü Düzenle</h2>
+        <p>Ürün bilgilerini ve fotoğraflarını güncelle.</p>
+      </div>
+
+      <button type="button" class="modalClose" (click)="closeEdit()">×</button>
+    </div>
+
+    <form class="editForm" (ngSubmit)="submitEdit()">
+      <div class="fieldGrid">
+        <div class="field field--full">
+          <label>Ürün Adı</label>
+          <input name="name" [(ngModel)]="editModel.name" required />
+        </div>
+
+        <div class="field">
+          <label>Fiyat (₺)</label>
+          <input type="number" name="price" [(ngModel)]="editModel.price" min="1" required />
+        </div>
+
+        <div class="field">
+          <label>Durum</label>
+          <select name="condition" [(ngModel)]="editModel.condition">
+            <option *ngFor="let c of conditions" [value]="c">
+              {{ formatCondition(c) }}
+            </option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Şehir</label>
+          <select name="cityId" [(ngModel)]="editModel.cityId" required>
+            <option *ngFor="let c of cities" [ngValue]="c.cityId">
+              {{ c.cityName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Takım</label>
+          <select name="teamId" [(ngModel)]="editModel.teamId">
+            <option [ngValue]="null">Takım yok</option>
+            <option *ngFor="let t of teams" [ngValue]="t.teamId">
+              {{ t.teamName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="field field--full">
+          <label>Kısa Açıklama</label>
+          <input name="shortDescription" [(ngModel)]="editModel.shortDescription" />
+        </div>
+
+        <div class="field field--full">
+          <label>Açıklama</label>
+          <textarea name="description" [(ngModel)]="editModel.description" rows="5"></textarea>
+        </div>
+
+        <div class="field field--full">
+          <div class="pictureHeader">
+            <label>Fotoğraflar</label>
+
+            <button type="button" class="smallBtn" (click)="addEditFileInput()">
+              {{ editFileInputs.length === 0 ? '+ Foto Ekle' : 'Foto Sayısını Arttır' }}
+            </button>
+          </div>
+
+          <label class="replaceCheck">
+            <input
+              type="checkbox"
+              [(ngModel)]="replacePhotos"
+              name="replacePhotos"
+            />
+            Eski fotoğrafları sil ve yeni seçilenlerle değiştir
+          </label>
+
+          <div class="photoHint" *ngIf="editFileInputs.length === 0">
+            Yeni fotoğraf eklemezsen mevcut fotoğraflar korunur.
+          </div>
+
+          <div class="pictureList" *ngIf="editFileInputs.length > 0">
+            <div
+              class="pictureRow"
+              *ngFor="let input of editFileInputs; let i = index; trackBy: trackByEditFileInputId"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onEditFileSelected($event, i)"
+              />
+
+              <button type="button" class="removeBtn" (click)="removeEditFileInput(i)">
+                Sil
+              </button>
+
+              <div class="selectedFileName" *ngIf="input.file">
+                Seçilen dosya: {{ input.file.name }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modalActions">
+        <button type="button" class="ghostBtn" (click)="closeEdit()">Vazgeç</button>
+        <button type="submit" class="submitBtn">Güncelle</button>
+      </div>
+    </form>
   </div>
 </div>

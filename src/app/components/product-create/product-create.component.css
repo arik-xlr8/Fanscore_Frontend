@@ -1,0 +1,362 @@
+.page {
+  padding: 100px 24px 40px;
+  min-height: 100vh;
+  font-family: "Montserrat", sans-serif;
+}
+
+.shell {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.hero {
+  margin-bottom: 28px;
+  padding: 28px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+}
+
+.heroTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: 34px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+}
+
+.subtitle {
+  margin-top: 8px;
+  font-size: 15px;
+  color: #475569;
+  line-height: 1.6;
+  max-width: 720px;
+}
+
+.backBtn,
+.ghostBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 150px;
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #0f172a;
+  text-decoration: none;
+  font-weight: 700;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  transition: 0.2s ease;
+}
+
+.backBtn:hover,
+.ghostBtn:hover {
+  transform: translateY(-1px);
+  background: #f8fafc;
+}
+
+.formCard {
+  padding: 28px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field--full {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  border: 1px solid #dbe4ea;
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+  outline: none;
+  color: #0f172a;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  box-sizing: border-box;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 140px;
+  line-height: 1.65;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: rgba(0, 194, 168, 0.55);
+  box-shadow: 0 0 0 4px rgba(0, 194, 168, 0.08);
+}
+
+.field small {
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pictureHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.photoHint {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pictureList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pictureRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.smallBtn,
+.removeBtn {
+  height: 44px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: 0.2s ease;
+}
+
+.smallBtn {
+  background: rgba(0, 194, 168, 0.1);
+  color: #008f7c;
+}
+
+.smallBtn:hover {
+  background: #00c2a8;
+  color: #ffffff;
+}
+
+.removeBtn {
+  background: rgba(239, 68, 68, 0.1);
+  color: #b91c1c;
+}
+
+.removeBtn:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.stateBox {
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-weight: 500;
+}
+
+.stateBox--error {
+  border-color: rgba(239, 68, 68, 0.18);
+  background: rgba(254, 242, 242, 0.9);
+  color: #b91c1c;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.submitBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  height: 48px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #00c2a8, #00a896);
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: 0 14px 30px rgba(0, 168, 150, 0.18);
+}
+
+.submitBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  opacity: 0.96;
+}
+
+.submitBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  filter: grayscale(0.35);
+}
+
+.field input[type="file"] {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 16px;
+  background: #f8fafc;
+  cursor: pointer;
+}
+
+.field input[type="file"]::file-selector-button {
+  margin-right: 14px;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #00c2a8, #00a896);
+  color: #ffffff;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.selectedFiles {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.selectedFile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.selectedFile span {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.selectedFile .removeBtn {
+  min-width: 70px;
+  height: 38px;
+  padding: 0 12px;
+}
+
+.smallBtn {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: rgba(0, 194, 168, 0.1);
+  color: #008f7c;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.smallBtn:hover {
+  background: #00c2a8;
+  color: white;
+}
+
+.selectedFileName {
+  grid-column: 1 / -1;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 90px 18px 24px;
+  }
+
+  .hero,
+  .formCard {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .fieldGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions,
+  .pictureRow {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .ghostBtn,
+  .submitBtn,
+  .backBtn,
+  .removeBtn,
+  .smallBtn {
+    width: 100%;
+  }
+}

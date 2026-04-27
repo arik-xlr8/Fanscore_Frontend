@@ -1,0 +1,57 @@
+<section class="last-matches-page">
+  <div class="matches-shell">
+    <div class="matches-header">
+      <div>
+        <p class="eyebrow">Football Center</p>
+        <h1>Son Maçlar</h1>
+        <p class="subtitle">
+          Dünyadan ve liglerden en güncel maç sonuçları.
+        </p>
+      </div>
+
+      <a routerLink="/teams" class="all-teams">
+        Tüm Takımlar
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="matches-grid">
+      <article
+        class="match-card"
+        *ngFor="let match of recentMatches"
+      >
+        <div class="match-league">
+          <span>{{ match.league }}</span>
+          <span>{{ match.date }}</span>
+        </div>
+
+        <div class="teams-row">
+          <div class="team">
+            <div class="team-logo">{{ match.home.charAt(0) }}</div>
+            <span>{{ match.home }}</span>
+          </div>
+
+          <div class="score-box">
+            <span>{{ match.homeScore }}</span>
+            <small>-</small>
+            <span>{{ match.awayScore }}</span>
+          </div>
+
+          <div class="team team-away">
+            <span>{{ match.away }}</span>
+            <div class="team-logo">{{ match.away.charAt(0) }}</div>
+          </div>
+        </div>
+
+        <div class="match-footer">
+          <span>Final</span>
+          <button type="button">Detay</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="empty-state" *ngIf="recentMatches.length === 0">
+      Maç bulunamadı.
+    </div>
+  </div>
+</section>

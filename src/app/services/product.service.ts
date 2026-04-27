@@ -23,11 +23,11 @@ export class ProductService {
     return this.http.get<ProductDetail>(`${this.baseUrl}/${productId}`);
   }
 
-  createProduct(payload: ProductCreate): Observable<ProductDetail> {
+  createProduct(payload: FormData): Observable<ProductDetail> {
     return this.http.post<ProductDetail>(this.baseUrl, payload);
   }
 
-  updateProduct(productId: number, payload: ProductUpdate): Observable<ApiMessageResponse> {
+  updateProduct(productId: number, payload: FormData): Observable<ApiMessageResponse> {
     return this.http.put<ApiMessageResponse>(`${this.baseUrl}/${productId}`, payload);
   }
 
@@ -41,5 +41,9 @@ export class ProductService {
 
   getAllCities(): Observable<City[]> {
     return this.http.get<City[]>(this.cityUrl);
+  }
+
+  getMyProducts(): Observable<ProductList[]> {
+    return this.http.get<ProductList[]>(`${this.baseUrl}/my-products`);
   }
 }

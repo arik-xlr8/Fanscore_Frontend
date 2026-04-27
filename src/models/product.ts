@@ -57,9 +57,7 @@ export interface ProductCreate {
   teamId?: number | null;
   cityId: number;
   condition: ProductCondition;
-  pictureUrls?: string[];
 }
-
 export interface ProductUpdate {
   name: string;
   shortDescription?: string | null;
@@ -68,9 +66,20 @@ export interface ProductUpdate {
   teamId?: number | null;
   cityId: number;
   condition: ProductCondition;
-  pictureUrls?: string[];
 }
 
 export interface ApiMessageResponse {
   message: string;
+}
+
+export interface City {
+  cityId: number;
+  plateCode: number;
+  cityName: string;
+}
+
+export interface Team {
+  teamId: number;
+  teamName: string;
+  ppUrl?: string | null;
 }
