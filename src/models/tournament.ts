@@ -2,9 +2,11 @@ export interface TournamentList {
   haliSahaId: number;
   name: string;
   description?: string | null;
-  city: string;
-  createdAt: string;
 
+  cityId: number;
+  cityName?: string | null;
+
+  createdAt: string;
   price: number;
   teamSize: number;
 
@@ -16,9 +18,11 @@ export interface TournamentDetail {
   haliSahaId: number;
   name: string;
   description?: string | null;
-  city: string;
-  createdAt: string;
 
+  cityId: number;
+  cityName?: string | null;
+
+  createdAt: string;
   price: number;
   teamSize: number;
 
@@ -31,8 +35,7 @@ export interface TournamentDetail {
 export interface TournamentCreate {
   name: string;
   description?: string | null;
-  city: string;
-
+  cityId: number;
   price: number;
   teamSize: number;
 }
@@ -40,10 +43,15 @@ export interface TournamentCreate {
 export interface TournamentUpdate {
   name: string;
   description?: string | null;
-  city: string;
-
+  cityId: number;
   price: number;
   teamSize: number;
+}
+
+export interface City {
+  cityId: number;
+  plateCode: number;
+  cityName: string;
 }
 
 export interface ApiMessageResponse {

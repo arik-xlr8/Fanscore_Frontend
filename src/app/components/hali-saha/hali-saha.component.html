@@ -3,7 +3,21 @@
     <section class="hero">
       <div class="heroTop">
         <div>
-          <div class="title">Halı Saha Ayarla <span routerLink="/halisaha-create" class="create">+</span></div>
+          <div class="title">
+            Halı Saha Ayarla
+
+            <span routerLink="/halisaha-create" class="create">+</span>
+
+            <button
+              type="button"
+              class="mineFilterBtn"
+              [class.mineFilterBtn--active]="showOnlyMine"
+              (click)="toggleMyTournaments()"
+            >
+              {{ showOnlyMine ? 'Tüm İlanlar' : 'Benim Halı Sahalarım' }}
+            </button>
+          </div>
+
           <div class="subtitle">
             Açık maçları keşfet, eksik oyuncu bul, hızlıca iletişime geç.
           </div>
@@ -43,7 +57,10 @@
     </div>
 
     <section class="grid" *ngIf="!isLoading && !errorMessage && filteredItems.length > 0">
-      <article class="card" *ngFor="let item of filteredItems; trackBy: trackByItemId">
+      <article
+        class="card"
+        *ngFor="let item of filteredItems; trackBy: trackByItemId"
+      >
         <div class="imgWrap">
           <img
             src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1200&q=80"
@@ -52,7 +69,7 @@
 
           <div class="badgeRow">
             <div class="badge">{{ formatTeamSize(item.teamSize) }}</div>
-            <div class="badge badge--muted">{{ item.city }}</div>
+            <div class="badge badge--muted">{{ item.cityName }}</div>
           </div>
 
           <div class="loc">
@@ -71,6 +88,24 @@
             <span>Oluşturan: {{ item.userName || 'Bilinmeyen kullanıcı' }}</span>
           </div>
 
+          <div class="ownerActions" *ngIf="showOnlyMine">
+            <button
+              type="button"
+              class="editBtn"
+              (click)="openEdit(item, $event)"
+            >
+              Düzenle
+            </button>
+
+            <button
+              type="button"
+              class="deleteBtn"
+              (click)="deleteTournament(item, $event)"
+            >
+              Sil
+            </button>
+          </div>
+
           <div class="bottom">
             <div class="price">
               <div class="k">Maç Ücreti</div>
@@ -87,5 +122,88 @@
         </div>
       </article>
     </section>
+  </div>
+</div>
+
+<div class="modalOverlay" *ngIf="isEditOpen" (click)="closeEdit()">
+  <div class="editModal" (click)="$event.stopPropagation()">
+    <div class="modalHead">
+      <div>
+        <h2>Halı Saha İlanını Düzenle</h2>
+        <p>Maç bilgilerini güncelle.</p>
+      </div>
+
+      <button type="button" class="modalClose" (click)="closeEdit()">×</button>
+    </div>
+
+    <form class="editForm" (ngSubmit)="submitEdit()">
+      <div class="fieldGrid">
+        <div class="field field--full">
+          <label>Maç Adı</label>
+          <input
+            name="name"
+            [(ngModel)]="editModel.name"
+            placeholder="Örn: Cumartesi Akşam 8'e 8 Maç"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label>Şehir</label>
+          <select
+            name="cityId"
+            [(ngModel)]="editModel.cityId"
+            required
+          >
+            <option *ngFor="let city of cities" [ngValue]="city.cityId">
+              {{ city.cityName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Takım Boyutu</label>
+          <input
+            type="number"
+            name="teamSize"
+            [(ngModel)]="editModel.teamSize"
+            min="1"
+            required
+          />
+        </div>
+
+        <div class="field field--full">
+          <label>Maç Ücreti (₺)</label>
+          <input
+            type="number"
+            name="price"
+            [(ngModel)]="editModel.price"
+            min="0"
+            step="0.01"
+            required
+          />
+        </div>
+
+        <div class="field field--full">
+          <label>Açıklama</label>
+          <textarea
+            name="description"
+            [(ngModel)]="editModel.description"
+            rows="5"
+            placeholder="Saat, konum, eksik oyuncu sayısı, zemin türü gibi detayları yaz..."
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="modalActions">
+        <button type="button" class="ghostBtn" (click)="closeEdit()">
+          Vazgeç
+        </button>
+
+        <button type="submit" class="submitBtn">
+          Güncelle
+        </button>
+      </div>
+    </form>
   </div>
 </div>

@@ -6,7 +6,8 @@ import {
   TournamentDetail,
   TournamentList,
   TournamentUpdate,
-  ApiMessageResponse
+  ApiMessageResponse,
+  City
 } from '../../models/tournament';
 
 @Injectable({
@@ -16,6 +17,7 @@ export class TournamentService {
   private http = inject(HttpClient);
 
   private readonly baseUrl = 'http://localhost:5153/api/Tournament';
+  private readonly cityUrl = 'http://localhost:5153/api/City';
 
   getAllTournaments(): Observable<TournamentList[]> {
     return this.http.get<TournamentList[]>(this.baseUrl);
@@ -35,5 +37,13 @@ export class TournamentService {
 
   deleteTournament(id: number): Observable<ApiMessageResponse> {
     return this.http.delete<ApiMessageResponse>(`${this.baseUrl}/${id}`);
+  }
+
+  getAllCities(): Observable<City[]> {
+    return this.http.get<City[]>(this.cityUrl);
+  }
+
+  getMyTournaments(): Observable<TournamentList[]> {
+    return this.http.get<TournamentList[]>(`${this.baseUrl}/my-tournaments`);
   }
 }

@@ -22,7 +22,7 @@
           <div>
             <h1 class="title">{{ tournament.name }}</h1>
             <div class="sub">
-              {{ tournament.city }} • {{ formatDate(tournament.createdAt) }}
+              {{ tournament.cityName }} • {{ formatDate(tournament.createdAt) }}
             </div>
           </div>
 
@@ -34,7 +34,7 @@
 
         <div class="chips">
           <span class="chip">{{ formatTeamSize(tournament.teamSize) }}</span>
-          <span class="chip chip--muted">{{ tournament.city }}</span>
+          <span class="chip chip--muted">{{ tournament.cityName }}</span>
         </div>
 
         <div class="section">

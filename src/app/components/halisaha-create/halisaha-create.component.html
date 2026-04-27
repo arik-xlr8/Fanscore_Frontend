@@ -17,7 +17,10 @@
 
     <section class="formCard">
       <form class="form" (ngSubmit)="onSubmit()">
+
         <div class="fieldGrid">
+
+          <!-- NAME -->
           <div class="field field--full">
             <label for="name">Maç Adı</label>
             <input
@@ -30,18 +33,27 @@
             />
           </div>
 
+          <!-- CITY SELECT -->
           <div class="field">
-            <label for="city">Konum</label>
-            <input
-              id="city"
-              type="text"
-              name="city"
-              [(ngModel)]="model.city"
-              placeholder="Örn: Antalya/Muratpaşa Belediyenin Karşısı"
+            <label for="cityId">Şehir</label>
+
+            <select
+              id="cityId"
+              name="cityId"
+              [(ngModel)]="model.cityId"
               required
-            />
+            >
+              <option [ngValue]="0">
+                {{ cities.length === 0 ? 'Şehirler yüklenemedi' : 'Şehir seç' }}
+              </option>
+
+              <option *ngFor="let city of cities" [ngValue]="city.cityId">
+                {{ city.cityName }}
+              </option>
+            </select>
           </div>
 
+          <!-- TEAM SIZE -->
           <div class="field">
             <label for="teamSize">Takım Boyutu</label>
             <input
@@ -55,6 +67,7 @@
             />
           </div>
 
+          <!-- PRICE -->
           <div class="field field--full">
             <label for="price">Maç Ücreti (₺)</label>
             <input
@@ -69,6 +82,7 @@
             />
           </div>
 
+          <!-- DESCRIPTION -->
           <div class="field field--full">
             <label for="description">Açıklama</label>
             <textarea
@@ -79,23 +93,34 @@
               placeholder="Saat, konum, eksik oyuncu sayısı, zemin türü gibi detayları yaz..."
             ></textarea>
           </div>
+
         </div>
 
+        <!-- ERROR -->
         <div *ngIf="error" class="stateBox stateBox--error">
           {{ error }}
         </div>
 
+        <!-- SUCCESS -->
         <div *ngIf="success" class="stateBox stateBox--success">
           {{ success }}
         </div>
 
+        <!-- ACTIONS -->
         <div class="actions">
-          <a routerLink="/halisaha" class="ghostBtn">Vazgeç</a>
+          <a routerLink="/halisaha" class="ghostBtn">
+            Vazgeç
+          </a>
 
-          <button type="submit" class="submitBtn" [disabled]="loading">
+          <button
+            type="submit"
+            class="submitBtn"
+            [disabled]="loading"
+          >
             {{ loading ? 'Oluşturuluyor...' : 'İlanı Oluştur' }}
           </button>
         </div>
+
       </form>
     </section>
   </div>

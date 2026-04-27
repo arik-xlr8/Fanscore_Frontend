@@ -100,7 +100,8 @@
 }
 
 .field input,
-.field textarea {
+.field textarea,
+.field select {
   width: 100%;
   border: 1px solid #dbe4ea;
   border-radius: 16px;
@@ -121,7 +122,8 @@
 }
 
 .field input:focus,
-.field textarea:focus {
+.field textarea:focus,
+.field select {
   border-color: rgba(0, 194, 168, 0.55);
   box-shadow: 0 0 0 4px rgba(0, 194, 168, 0.08);
 }
